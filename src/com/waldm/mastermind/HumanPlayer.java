@@ -20,7 +20,7 @@ public class HumanPlayer implements Player {
 
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader buffer = new BufferedReader(isr);
-        String guess = null;
+        String guess;
 
         try {
             guess = buffer.readLine();

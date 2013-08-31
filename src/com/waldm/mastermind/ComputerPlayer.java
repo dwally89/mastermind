@@ -5,36 +5,34 @@ import java.util.List;
 
 public class ComputerPlayer implements Player {
     private List<String> possibilities = new ArrayList<String>();
-    private String guess;
-
-    private ComputerPlayer() {  }
+    private String currentGuess;
 
     public ComputerPlayer(int codeLength, char[] alphabet) {
         possibilities = generatePossibilities(codeLength, alphabet);
     }
 
     private List<String> generatePossibilities(int codeLength, char[] alphabet) {
-        List<String> additionalPossibilites = new ArrayList<String>();
+        List<String> additionalPossibilities = new ArrayList<String>();
 
         for (char c : alphabet) {
             if (codeLength == 1){
-                additionalPossibilites.add(String.valueOf(c));
+                additionalPossibilities.add(String.valueOf(c));
             } else {
-                List<String> evenMorePosibilities = generatePossibilities(codeLength - 1, alphabet);
-                for (String possibility : evenMorePosibilities) {
-                    additionalPossibilites.add(c + possibility);
+                List<String> evenMorePossibilities = generatePossibilities(codeLength - 1, alphabet);
+                for (String possibility : evenMorePossibilities) {
+                    additionalPossibilities.add(c + possibility);
                 }
             }
         }
 
-        return additionalPossibilites;
+        return additionalPossibilities;
     }
 
     @Override
     public String requestGuess(int codeLength, char[] alphabet) {
-        guess = possibilities.remove(0);
-        System.out.println("Guess: " + guess);
-        return guess;
+        currentGuess = possibilities.remove(0);
+        System.out.println("Guess: " + currentGuess);
+        return currentGuess;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class ComputerPlayer implements Player {
         List<String> newPossibilities = new ArrayList<String>();
         Result possibilityResult;
         for (String possibility : possibilities) {
-            possibilityResult = Mastermind.calculateResult(possibility, guess);
+            possibilityResult = Result.calculateResult(possibility, currentGuess);
 
             if (possibilityResult.locationCorrect == result.locationCorrect && possibilityResult.numberCorrect == result.numberCorrect) {
                 newPossibilities.add(possibility);
@@ -68,9 +66,5 @@ public class ComputerPlayer implements Player {
     @Override
     public void informGameOver(String code) {
         System.out.println("ComputerPlayer lost the game. The code was: " + code);
-    }
-
-    public static void main (String[] args) {
-        ComputerPlayer computerPlayer = new ComputerPlayer(4, new char[]{'1', '2', '3', '4', '5', '6'});
     }
 }
