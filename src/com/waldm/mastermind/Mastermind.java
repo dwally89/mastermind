@@ -91,8 +91,11 @@ public class Mastermind {
     }
 
     private void play() {
-        int currentGuess = 1;
-        while (currentGuess < maximumNumberOfGuesses) {
+        System.out.println("Game starting!");
+
+        int numberOfGuessesLeft = maximumNumberOfGuesses;
+        while (numberOfGuessesLeft > 0) {
+            guesser.informNumberOfGuessesLeft(numberOfGuessesLeft);
             String guess = guesser.requestGuess(codeLength, alphabet);
 
             if (guess.length() != codeLength) {
@@ -106,13 +109,7 @@ public class Mastermind {
             }
 
             guesser.informResult(codeCreator.calculateResult(guess));
-
-            int numberOfGuessesLeft = maximumNumberOfGuesses - currentGuess - 1;
-            if (numberOfGuessesLeft > 0) {
-                guesser.informNumberOfGuessesLeft(numberOfGuessesLeft);
-            }
-
-            currentGuess++;
+            numberOfGuessesLeft--;
         }
 
         guesser.informGameOver(codeCreator.getCode());

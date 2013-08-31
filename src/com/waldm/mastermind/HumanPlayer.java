@@ -72,7 +72,12 @@ public class HumanPlayer implements Player {
 
     @Override
     public void informNumberOfGuessesLeft(int numberOfGuessesLeft) {
-        System.out.println(numberOfGuessesLeft + " guesses left\n");
+        String message = numberOfGuessesLeft + " guess";
+        if (numberOfGuessesLeft > 1) {
+            message += "es";
+        }
+
+        System.out.println(message + " left\n");
     }
 
     @Override
