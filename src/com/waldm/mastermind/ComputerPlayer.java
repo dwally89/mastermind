@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ComputerPlayer implements Player {
     private List<String> possibilities = new ArrayList<String>();
+    private String guess;
 
     private ComputerPlayer() {  }
 
@@ -31,8 +32,8 @@ public class ComputerPlayer implements Player {
 
     @Override
     public String requestGuess(int codeLength, char[] alphabet) {
-        String guess = possibilities.get(0);
-        System.out.println("Guess:" + guess);
+        guess = possibilities.remove(0);
+        System.out.println("Guess: " + guess);
         return guess;
     }
 
@@ -47,8 +48,18 @@ public class ComputerPlayer implements Player {
     }
 
     @Override
-    public void informResult(Result result) {
-        throw new RuntimeException("Not implemented yet");
+    public void informResult(final Result result) {
+        List<String> newPossibilities = new ArrayList<String>();
+        Result possibilityResult;
+        for (String possibility : possibilities) {
+            possibilityResult = Mastermind.calculateResult(possibility, guess);
+
+            if (possibilityResult.locationCorrect == result.locationCorrect && possibilityResult.numberCorrect == result.numberCorrect) {
+                newPossibilities.add(possibility);
+            }
+        }
+
+        possibilities = newPossibilities;
     }
 
     @Override
