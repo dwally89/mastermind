@@ -31,17 +31,23 @@ public class Mastermind {
 
             if (guess.length() != CODE_LENGTH) {
                 System.out.println("Make sure you enter " + CODE_LENGTH + " numbers");
-            } else {
-                if (guess.equals(code)) {
-                    System.out.println("You guessed correctly!");
-                    break;
-                }
-
-                Result result = calculateResult(guess, code);
-                System.out.println(createFeedbackMessage(result));
-
-                currentGuess++;
+                continue;
             }
+
+            if (guess.equals(code)) {
+                System.out.println("You guessed correctly!");
+                break;
+            }
+
+            Result result = calculateResult(guess, code);
+            System.out.println(createFeedbackMessage(result));
+
+            int numberOfGuessesLeft = MAXIMUM_NUMBER_OF_GUESSES - currentGuess - 1;
+            if (numberOfGuessesLeft > 1) {
+                System.out.println(numberOfGuessesLeft + " guesses left\n");
+            }
+
+            currentGuess++;
         }
 
         System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
@@ -98,7 +104,7 @@ public class Mastermind {
             feedbackMessage += "s";
         }
 
-        feedbackMessage += " in the correct location and there ";
+        feedbackMessage += " in the correct location\nThere ";
 
         if(result.numberCorrect == 1) {
             feedbackMessage += "is";
