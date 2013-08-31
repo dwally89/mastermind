@@ -1,20 +1,15 @@
 package com.waldm.mastermind;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class HumanCodeCreator implements CodeCreator {
     @Override
     public String getCode() {
         System.out.println("What was the code? ");
-
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(isr);
         String code;
 
         try {
-            code = buffer.readLine();
+            code = Utils.readStringFromConsole();
         } catch (IOException e) {
             throw new RuntimeException("An input error has occurred");
         }
@@ -27,12 +22,9 @@ public class HumanCodeCreator implements CodeCreator {
         System.out.println("The guess was: " + guess);
         System.out.println("Was this correct? (Y/N): ");
 
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(isr);
         String answer;
-
         try {
-            answer = buffer.readLine();
+            answer = Utils.readStringFromConsole();
         } catch (IOException e) {
             throw new RuntimeException("An input error has occurred");
         }
@@ -42,15 +34,13 @@ public class HumanCodeCreator implements CodeCreator {
 
     @Override
     public Result calculateResult(String guess) {
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(isr);
         int rightPosition, wrongPosition;
 
         try {
             System.out.println("How many were correct and in the right position? ");
-            rightPosition = Integer.parseInt(buffer.readLine());
+            rightPosition = Integer.parseInt(Utils.readStringFromConsole());
             System.out.println("How many were correct but in the wrong position? ");
-            wrongPosition = Integer.parseInt(buffer.readLine());
+            wrongPosition = Integer.parseInt(Utils.readStringFromConsole());
         } catch (IOException e) {
             throw new RuntimeException("An input error has occurred");
         }

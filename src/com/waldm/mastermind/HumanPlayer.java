@@ -1,8 +1,6 @@
 package com.waldm.mastermind;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class HumanPlayer implements Player {
     @Override
@@ -18,12 +16,9 @@ public class HumanPlayer implements Player {
 
         System.out.println("Choose a " + codeLength + " character code, permissible characters being: " + alphabetString + ": ");
 
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(isr);
         String guess;
-
         try {
-            guess = buffer.readLine();
+            guess = Utils.readStringFromConsole();
         } catch (IOException e) {
             throw new RuntimeException("An input error has occurred");
         }
