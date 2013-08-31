@@ -19,7 +19,9 @@ public class Mastermind {
     }
 
     public static void main (String[] args) {
-        Mastermind mastermind = new Mastermind(4, new char[]{'1', '2', '3', '4', '5', '6'}, 10, new HumanPlayer());
+        final int codeLength = 4;
+        final char[] alphabet = new char[]{'1', '2', '3', '4', '5', '6'};
+        Mastermind mastermind = new Mastermind(codeLength, alphabet, 10, new ComputerPlayer(codeLength, alphabet));
         mastermind.play();
     }
 

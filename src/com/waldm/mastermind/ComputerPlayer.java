@@ -10,10 +10,6 @@ public class ComputerPlayer implements Player {
 
     public ComputerPlayer(int codeLength, char[] alphabet) {
         possibilities = generatePossibilities(codeLength, alphabet);
-
-        for (String possibility : possibilities) {
-            System.out.println(possibility);
-        }
     }
 
     private List<String> generatePossibilities(int codeLength, char[] alphabet) {
@@ -35,17 +31,19 @@ public class ComputerPlayer implements Player {
 
     @Override
     public String requestGuess(int codeLength, char[] alphabet) {
-        throw new RuntimeException("Not implemented yet");
+        String guess = possibilities.get(0);
+        System.out.println("Guess:" + guess);
+        return guess;
     }
 
     @Override
     public void informIncorrectLength(int codeLength) {
-        throw new RuntimeException("Not implemented yet");
+        throw new RuntimeException("Guess of incorrect length. This should never occur with a ComputerPlayer");
     }
 
     @Override
     public void informCorrectGuess() {
-        throw new RuntimeException("Not implemented yet");
+        System.out.println("ComputerPlayer guessed correctly");
     }
 
     @Override
@@ -54,12 +52,14 @@ public class ComputerPlayer implements Player {
     }
 
     @Override
-    public void informNumberOfGuessesLeft(int numberOfGuessesLeft) {
-        throw new RuntimeException("Not implemented yet");
-    }
+    public void informNumberOfGuessesLeft(int numberOfGuessesLeft) {  }
 
     @Override
     public void informGameOver(String code) {
-        throw new RuntimeException("Not implemented yet");
+        System.out.println("ComputerPlayer lost the game. The code was: " + code);
+    }
+
+    public static void main (String[] args) {
+        ComputerPlayer computerPlayer = new ComputerPlayer(4, new char[]{'1', '2', '3', '4', '5', '6'});
     }
 }
