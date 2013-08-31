@@ -6,8 +6,17 @@ import java.io.InputStreamReader;
 
 public class HumanPlayer implements Player {
     @Override
-    public String requestGuess(int codeLength, int minimumNumber, int maximumNumber) {
-        System.out.println("Choose a " + codeLength + " digit code, each digit between " + minimumNumber + "-" + maximumNumber + ": ");
+    public String requestGuess(int codeLength, char[] alphabet) {
+        String alphabetString = "[";
+        for (int i = 0; i < alphabet.length; i++) {
+            if (i != 0) {
+                alphabetString += ", ";
+            }
+            alphabetString += alphabet[i];
+        }
+        alphabetString += "]";
+
+        System.out.println("Choose a " + codeLength + " character code, permissible characters being: " + alphabetString + ": ");
 
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader buffer = new BufferedReader(isr);

@@ -1,7 +1,7 @@
 package com.waldm.mastermind;
 
 public interface Player {
-    String requestGuess(int codeLength, int minimumNumber, int maximumNumber);
+    String requestGuess(int codeLength, char[] alphabet);
     void informIncorrectLength(int codeLength);
     void informCorrectGuess();
     void informResult(Result result);

@@ -5,16 +5,14 @@ import java.util.Random;
 
 public class Mastermind {
     private final int codeLength;
-    private final int minimumNumber;
-    private final int maximumNumber;
+    private final char[] alphabet;
     private final int maximumNumberOfGuesses;
     private final String code;
     private final Player player;
 
-    public Mastermind(int codeLength, int minimumNumber, int maximumNumber, int maximumNumberOfGuesses, Player player) {
+    public Mastermind(int codeLength, char[] alphabet, int maximumNumberOfGuesses, Player player) {
         this.codeLength = codeLength;
-        this.minimumNumber = minimumNumber;
-        this.maximumNumber = maximumNumber;
+        this.alphabet = alphabet;
         this.maximumNumberOfGuesses = maximumNumberOfGuesses;
         this.player = player;
         this.code = generateCode();
@@ -22,14 +20,14 @@ public class Mastermind {
 
     public static void main (String[] args)
     {
-        Mastermind mastermind = new Mastermind(4, 1, 6, 10, new HumanPlayer());
+        Mastermind mastermind = new Mastermind(4, new char[]{'1', '2', '3', '4', '5', '6'}, 10, new HumanPlayer());
         mastermind.play();
     }
 
     private void play() {
         int currentGuess = 1;
         while (currentGuess < maximumNumberOfGuesses) {
-            String guess = player.requestGuess(codeLength, minimumNumber, maximumNumber);
+            String guess = player.requestGuess(codeLength, alphabet);
 
             if (guess.length() != code.length()) {
                 player.informIncorrectLength(code.length());
@@ -58,7 +56,7 @@ public class Mastermind {
         Random rand = new Random();
         String code = "";
         for (int i = 0; i < codeLength; i++) {
-            code += String.valueOf(rand.nextInt((maximumNumber - minimumNumber) + 1) + minimumNumber);
+            code += alphabet[rand.nextInt(alphabet.length)];
         }
 
         return code;
