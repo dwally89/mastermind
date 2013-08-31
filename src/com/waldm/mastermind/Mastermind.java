@@ -9,7 +9,7 @@ public class Mastermind {
     private static final int CODE_LENGTH = 4;
     private static final int MAXIMUM_NUMBER_OF_GUESSES = 10;
 
-    private static class Result {
+    public static class Result {
         public final int locationCorrect;
         public final int numberCorrect;
 
@@ -43,7 +43,7 @@ public class Mastermind {
             System.out.println(createFeedbackMessage(result));
 
             int numberOfGuessesLeft = MAXIMUM_NUMBER_OF_GUESSES - currentGuess - 1;
-            if (numberOfGuessesLeft > 1) {
+            if (numberOfGuessesLeft > 0) {
                 System.out.println(numberOfGuessesLeft + " guesses left\n");
             }
 
@@ -76,14 +76,29 @@ public class Mastermind {
         return code;
     }
 
-    private static Result calculateResult(String guess, String code) {
+    public static Result calculateResult(String guess, String code) {
         int locationCorrect = 0;
         int numberCorrect = 0;
-        for(int i = 0; i < code.length(); i++) {
-            if(guess.charAt(i) == code.charAt(i)) {
+
+        boolean[] charMatchedInCode = new boolean[CODE_LENGTH];
+
+        char currentChar;
+        for (int i = 0; i < guess.length(); i++) {
+            currentChar = guess.charAt(i);
+            if(currentChar == code.charAt(i)) {
                 locationCorrect++;
-            } else if (code.contains(String.valueOf(guess.charAt(i)))) {
-                numberCorrect++;
+                charMatchedInCode[i] = true;
+            } else if (code.contains(String.valueOf(currentChar))) {
+                for (int j = 0; j < guess.length(); j++) {
+                    // If the character in position j is not the same in both strings, and the
+                    // character at position j in the code is equal to our current character
+                    // then the number is correct
+                    if (j != i && code.charAt(j) != guess.charAt(j) && code.charAt(j) == currentChar && !charMatchedInCode[j]) {
+                        numberCorrect++;
+                        charMatchedInCode[j] = true;
+                        break;
+                    }
+                }
             }
         }
 
