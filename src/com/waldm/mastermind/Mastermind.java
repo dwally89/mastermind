@@ -27,54 +27,64 @@ public class Mastermind {
                 throw new RuntimeException("An input error has occurred");
             }
 
-            if (guess.equals(code)) {
-                System.out.println("You guessed correctly!");
-                break;
-            }
-
-            int locationCorrect = 0;
-            int numberCorrect = 0;
-            for(int i = 0; i < CODE_LENGTH; i++) {
-                if(guess.charAt(i) == code.charAt(i)) {
-                    locationCorrect++;
-                } else if (code.contains(String.valueOf(guess.charAt(i)))) {
-                    numberCorrect++;
+            if (guess.length() != CODE_LENGTH) {
+                System.out.println("Make sure you enter " + CODE_LENGTH + " numbers");
+            } else {
+                if (guess.equals(code)) {
+                    System.out.println("You guessed correctly!");
+                    break;
                 }
+
+                Result result = calculateResult(guess, code);
+
+                System.out.println(createFeedbackMessage(result));
+
+                currentGuess++;
             }
-
-            System.out.println(createFeedbackMessage(locationCorrect, numberCorrect));
-
-            currentGuess++;
         }
 
-        System.out.println("Game over, you lost, sorry :-(");
+        System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
     }
 
-    private static String createFeedbackMessage(int locationCorrect, int numberCorrect) {
+    private static Result calculateResult(String guess, String code) {
+        int locationCorrect = 0;
+        int numberCorrect = 0;
+        for(int i = 0; i < code.length(); i++) {
+            if(guess.charAt(i) == code.charAt(i)) {
+                locationCorrect++;
+            } else if (code.contains(String.valueOf(guess.charAt(i)))) {
+                numberCorrect++;
+            }
+        }
+
+        return new Result(locationCorrect, numberCorrect);
+    }
+
+    private static String createFeedbackMessage(Result result) {
         String feedbackMessage = "There ";
 
-        if (locationCorrect == 1) {
+        if (result.locationCorrect == 1) {
             feedbackMessage += "is";
         } else {
             feedbackMessage += "are";
         }
 
-        feedbackMessage += " " + locationCorrect + " correct number";
-        if (locationCorrect != 1) {
+        feedbackMessage += " " + result.locationCorrect + " correct number";
+        if (result.locationCorrect != 1) {
             feedbackMessage += "s";
         }
 
         feedbackMessage += " in the correct location and there ";
 
-        if(numberCorrect == 1) {
+        if(result.numberCorrect == 1) {
             feedbackMessage += "is";
         } else {
             feedbackMessage += "are";
         }
 
-        feedbackMessage += " " + numberCorrect + " correct number";
+        feedbackMessage += " " + result.numberCorrect + " correct number";
 
-        if(numberCorrect != 1) {
+        if(result.numberCorrect != 1) {
             feedbackMessage += "s";
         }
 
@@ -90,5 +100,15 @@ public class Mastermind {
         }
 
         return code;
+    }
+
+    private static class Result {
+        public final int locationCorrect;
+        public final int numberCorrect;
+
+        public Result(int locationCorrect, int numberCorrect) {
+            this.locationCorrect = locationCorrect;
+            this.numberCorrect = numberCorrect;
+        }
     }
 }
