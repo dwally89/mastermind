@@ -18,8 +18,7 @@ public class Mastermind {
         this.code = generateCode();
     }
 
-    public static void main (String[] args)
-    {
+    public static void main (String[] args) {
         Mastermind mastermind = new Mastermind(4, new char[]{'1', '2', '3', '4', '5', '6'}, 10, new HumanPlayer());
         mastermind.play();
     }
