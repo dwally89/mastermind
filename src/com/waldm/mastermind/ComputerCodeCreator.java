@@ -4,12 +4,12 @@ import java.util.Random;
 
 public class ComputerCodeCreator implements CodeCreator{
     private final String code;
-    private final char[] alphabet;
     private final int codeLength;
+    private final char[] alphabet;
 
-    public ComputerCodeCreator(char[] alphabet, int codeLength) {
-        this.alphabet = alphabet;
+    public ComputerCodeCreator(int codeLength, char[] alphabet) {
         this.codeLength = codeLength;
+        this.alphabet = alphabet;
         this.code = generateCode();
     }
 
