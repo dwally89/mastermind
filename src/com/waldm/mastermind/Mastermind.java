@@ -19,8 +19,8 @@ public class Mastermind {
         final int codeLength = 4;
         final char[] alphabet = new char[]{'1', '2', '3', '4', '5', '6'};
         Player guesser = new ComputerPlayer(codeLength, alphabet);
-        CodeCreator codeCreater = new HumanCodeCreator();
-        Mastermind mastermind = new Mastermind(codeLength, alphabet, 10, guesser, codeCreater);
+        CodeCreator codeCreator = new HumanCodeCreator();
+        Mastermind mastermind = new Mastermind(codeLength, alphabet, 10, guesser, codeCreator);
         mastermind.play();
     }
 

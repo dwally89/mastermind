@@ -2,6 +2,7 @@ package com.waldm.mastermind;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ComputerPlayer implements Player {
     private List<String> possibilities = new ArrayList<String>();
@@ -30,8 +31,8 @@ public class ComputerPlayer implements Player {
 
     @Override
     public String requestGuess(int codeLength, char[] alphabet) {
-        currentGuess = possibilities.remove(0);
-        System.out.println("Guess: " + currentGuess);
+        Random random = new Random();
+        currentGuess = possibilities.remove(random.nextInt(possibilities.size()));
         return currentGuess;
     }
 

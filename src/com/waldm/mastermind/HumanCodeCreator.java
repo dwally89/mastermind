@@ -42,8 +42,6 @@ public class HumanCodeCreator implements CodeCreator {
 
     @Override
     public Result calculateResult(String guess) {
-        System.out.println("Guesser guessed: " + guess);
-
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader buffer = new BufferedReader(isr);
         int rightPosition, wrongPosition;
