@@ -4,73 +4,61 @@ import java.io.*;
 import java.util.Random;
 
 public class Mastermind {
-    private static final int MINIMUM_NUMBER = 1;
-    private static final int MAXIMUM_NUMBER = 8;
-    private static final int CODE_LENGTH = 4;
-    private static final int MAXIMUM_NUMBER_OF_GUESSES = 10;
+    private final int codeLength;
+    private final int minimumNumber;
+    private final int maximumNumber;
+    private final int maximumNumberOfGuesses;
+    private final String code;
+    private final Player player;
 
-    public static class Result {
-        public final int locationCorrect;
-        public final int numberCorrect;
-
-        public Result(int locationCorrect, int numberCorrect) {
-            this.locationCorrect = locationCorrect;
-            this.numberCorrect = numberCorrect;
-        }
+    public Mastermind(int codeLength, int minimumNumber, int maximumNumber, int maximumNumberOfGuesses, Player player) {
+        this.codeLength = codeLength;
+        this.minimumNumber = minimumNumber;
+        this.maximumNumber = maximumNumber;
+        this.maximumNumberOfGuesses = maximumNumberOfGuesses;
+        this.player = player;
+        this.code = generateCode();
     }
 
     public static void main (String[] args)
     {
-        final String code = generateCode();
+        Mastermind mastermind = new Mastermind(4, 1, 6, 10, new HumanPlayer());
+        mastermind.play();
+    }
 
+    private void play() {
         int currentGuess = 1;
-        while (currentGuess < MAXIMUM_NUMBER_OF_GUESSES) {
-            System.out.println("Choose a " + CODE_LENGTH + " digit code, each digit between " + MINIMUM_NUMBER + "-" + MAXIMUM_NUMBER + ": ");
+        while (currentGuess < maximumNumberOfGuesses) {
+            String guess = player.requestGuess(codeLength, minimumNumber, maximumNumber);
 
-            String guess = getGuess();
-
-            if (guess.length() != CODE_LENGTH) {
-                System.out.println("Make sure you enter " + CODE_LENGTH + " numbers");
+            if (guess.length() != code.length()) {
+                player.informIncorrectLength(code.length());
                 continue;
             }
 
             if (guess.equals(code)) {
-                System.out.println("You guessed correctly!");
-                break;
+                player.informCorrectGuess();
+                System.exit(0);
             }
 
-            Result result = calculateResult(guess, code);
-            System.out.println(createFeedbackMessage(result));
+            player.informResult(calculateResult(guess, code));
 
-            int numberOfGuessesLeft = MAXIMUM_NUMBER_OF_GUESSES - currentGuess - 1;
+            int numberOfGuessesLeft = maximumNumberOfGuesses - currentGuess - 1;
             if (numberOfGuessesLeft > 0) {
-                System.out.println(numberOfGuessesLeft + " guesses left\n");
+                player.informNumberOfGuessesLeft(numberOfGuessesLeft);
             }
 
             currentGuess++;
         }
 
-        System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
+        player.informGameOver(code);
     }
 
-    private static String getGuess() {
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader buffer = new BufferedReader(isr);
-        String guess = null;
-
-        try {
-            guess = buffer.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException("An input error has occurred");
-        }
-        return guess;
-    }
-
-    private static String generateCode() {
+    private String generateCode() {
         Random rand = new Random();
         String code = "";
-        for (int i = 0; i < CODE_LENGTH; i++) {
-            code += String.valueOf(rand.nextInt((MAXIMUM_NUMBER - MINIMUM_NUMBER) + 1) + MINIMUM_NUMBER);
+        for (int i = 0; i < codeLength; i++) {
+            code += String.valueOf(rand.nextInt((maximumNumber - minimumNumber) + 1) + minimumNumber);
         }
 
         return code;
@@ -80,7 +68,7 @@ public class Mastermind {
         int locationCorrect = 0;
         int numberCorrect = 0;
 
-        boolean[] charMatchedInCode = new boolean[CODE_LENGTH];
+        boolean[] charMatchedInCode = new boolean[code.length()];
 
         char currentChar;
         for (int i = 0; i < guess.length(); i++) {
@@ -103,37 +91,5 @@ public class Mastermind {
         }
 
         return new Result(locationCorrect, numberCorrect);
-    }
-
-    private static String createFeedbackMessage(Result result) {
-        String feedbackMessage = "There ";
-
-        if (result.locationCorrect == 1) {
-            feedbackMessage += "is";
-        } else {
-            feedbackMessage += "are";
-        }
-
-        feedbackMessage += " " + result.locationCorrect + " correct number";
-        if (result.locationCorrect != 1) {
-            feedbackMessage += "s";
-        }
-
-        feedbackMessage += " in the correct location\nThere ";
-
-        if(result.numberCorrect == 1) {
-            feedbackMessage += "is";
-        } else {
-            feedbackMessage += "are";
-        }
-
-        feedbackMessage += " " + result.numberCorrect + " correct number";
-
-        if(result.numberCorrect != 1) {
-            feedbackMessage += "s";
-        }
-
-        feedbackMessage += " in the wrong location";
-        return feedbackMessage;
     }
 }
