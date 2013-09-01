@@ -1,14 +1,14 @@
 package com.waldm.mastermind;
 
 public interface UserInterface {
-    Player askForGuesser();
-    CodeCreator askForCodeCreator();
-    int askForMaximumNumberOfGuesses();
-    char[] askForAlphabet();
-    int askForCodeLength();
+    Player getGuesser();
+    CodeCreator getCodeCreator();
+    int getMaximumNumberOfGuesses();
+    char[] getAlphabet();
+    int getCodeLength();
     void alertGameStarting();
     void displayWelcomeMessage();
-    String askForCode();
+    String getCode();
     boolean askIfGuessWasCorrect(String guess);
     Result calculateResult(String guess);
     String requestGuess(int codeLength, char[] alphabet);

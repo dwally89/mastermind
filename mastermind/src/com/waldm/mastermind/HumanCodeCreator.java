@@ -9,7 +9,7 @@ public class HumanCodeCreator implements CodeCreator {
 
     @Override
     public String getCode() {
-        return userInterface.askForCode();
+        return userInterface.getCode();
     }
 
     @Override

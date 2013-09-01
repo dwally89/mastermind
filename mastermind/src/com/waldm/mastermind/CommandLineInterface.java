@@ -7,15 +7,15 @@ public class CommandLineInterface implements UserInterface {
 
     public CommandLineInterface() {
         displayWelcomeMessage();
-        mastermind = new Mastermind(askForCodeLength(), askForAlphabet(), askForMaximumNumberOfGuesses());
-        mastermind.setCodeCreator(askForCodeCreator());
-        mastermind.setGuesser(askForGuesser());
+        mastermind = new Mastermind(getCodeLength(), getAlphabet(), getMaximumNumberOfGuesses());
+        mastermind.setCodeCreator(getCodeCreator());
+        mastermind.setGuesser(getGuesser());
         alertGameStarting();
         mastermind.play();
     }
 
     @Override
-    public Player askForGuesser() {
+    public Player getGuesser() {
         System.out.println("Who will be guessing the code?");
         System.out.println("Enter H for human or C for computer");
         String guesserString;
@@ -33,7 +33,7 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public CodeCreator askForCodeCreator() {
+    public CodeCreator getCodeCreator() {
         System.out.println("Who will be creating the code?");
         System.out.println("Enter H for human or C for computer");
         String codeCreatorString;
@@ -51,7 +51,7 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public int askForMaximumNumberOfGuesses() {
+    public int getMaximumNumberOfGuesses() {
         System.out.println("What is the maximum number of guesses allowed? ");
         try {
             return Integer.parseInt(Utils.readStringFromConsole());
@@ -61,7 +61,7 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public char[] askForAlphabet() {
+    public char[] getAlphabet() {
         System.out.println("What letters/numbers can the code contain?");
         System.out.println("Enter the letters/numbers as a continuous string, with no spaces or commas");
         String alphabetString;
@@ -80,7 +80,7 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public int askForCodeLength() {
+    public int getCodeLength() {
         System.out.println("How long should the code be? ");
         try {
             return Integer.parseInt(Utils.readStringFromConsole());
@@ -100,7 +100,7 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public String askForCode() {
+    public String getCode() {
         System.out.println("What was the code? ");
         String code;
 

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MastermindAndroid</string>
+    <string name="app_name">Mastermind</string>
+    <string name="welcome_message">Welcome to Mastermind!</string>
+    <string name="question_correct_guess">Was the guess correct?</string>
 </resources>
