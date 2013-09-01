@@ -61,11 +61,13 @@ public class ComputerPlayer implements Player {
 
     @Override
     public void informGameOver(String code, boolean playerWon, int numberOfGuessesPlayed) {
+        /*
         if (playerWon) {
             System.out.println("Computer player won the game in " + numberOfGuessesPlayed + " guesses");
         } else {
             System.out.println("ComputerPlayer lost the game. The code was: " + code);
         }
+        */
 
         System.exit(0);
     }

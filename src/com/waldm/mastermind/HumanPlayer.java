@@ -1,88 +1,34 @@
 package com.waldm.mastermind;
 
-import java.io.IOException;
-
 public class HumanPlayer implements Player {
+    private final UserInterface userInterface;
+
+    public HumanPlayer(UserInterface userInterface) {
+        this.userInterface = userInterface;
+    }
+
     @Override
     public String requestGuess(int codeLength, char[] alphabet) {
-        String alphabetString = "[";
-        for (int i = 0; i < alphabet.length; i++) {
-            if (i != 0) {
-                alphabetString += ", ";
-            }
-            alphabetString += alphabet[i];
-        }
-        alphabetString += "]";
-
-        System.out.println("Choose a " + codeLength + " character code, permissible characters being: " + alphabetString + ": ");
-
-        String guess;
-        try {
-            guess = Utils.readStringFromConsole();
-        } catch (IOException e) {
-            throw new RuntimeException("An input error has occurred");
-        }
-
-        return guess;
+        return userInterface.requestGuess(codeLength, alphabet);
     }
 
     @Override
     public void informIncorrectLength(int codeLength) {
-        System.out.println("Make sure you enter " + codeLength + " numbers");
+        userInterface.informIncorrectLength(codeLength);
     }
 
     @Override
     public void informResult(Result result) {
-        String feedbackMessage = "There ";
-
-        if (result.locationCorrect == 1) {
-            feedbackMessage += "is";
-        } else {
-            feedbackMessage += "are";
-        }
-
-        feedbackMessage += " " + result.locationCorrect + " correct number";
-        if (result.locationCorrect != 1) {
-            feedbackMessage += "s";
-        }
-
-        feedbackMessage += " in the correct location\nThere ";
-
-        if(result.numberCorrect == 1) {
-            feedbackMessage += "is";
-        } else {
-            feedbackMessage += "are";
-        }
-
-        feedbackMessage += " " + result.numberCorrect + " correct number";
-
-        if(result.numberCorrect != 1) {
-            feedbackMessage += "s";
-        }
-
-        feedbackMessage += " in the wrong location";
-
-        System.out.println(feedbackMessage);
+        userInterface.informResult(result);
     }
 
     @Override
     public void informNumberOfGuessesLeft(int numberOfGuessesLeft) {
-        String message = numberOfGuessesLeft + " guess";
-        if (numberOfGuessesLeft > 1) {
-            message += "es";
-        }
-
-        System.out.println(message + " left\n");
+        userInterface.informNumberOfGuessesLeft(numberOfGuessesLeft);
     }
 
     @Override
     public void informGameOver(String code, boolean playerWon, int numberOfGuessesPlayed) {
-        if (playerWon) {
-            System.out.println("Congratulations, you won in " + numberOfGuessesPlayed + " guesses!");
-        } else {
-            System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
-        }
-
-        System.exit(0);
+        userInterface.informGameOver("you", code, playerWon, numberOfGuessesPlayed);
     }
 }
