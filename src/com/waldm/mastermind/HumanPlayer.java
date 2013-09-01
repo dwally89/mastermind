@@ -32,11 +32,6 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void informCorrectGuess() {
-        System.out.println("You guessed correctly!");
-    }
-
-    @Override
     public void informResult(Result result) {
         String feedbackMessage = "There ";
 
@@ -81,7 +76,13 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void informGameOver(String code) {
-        System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
+    public void informGameOver(String code, boolean playerWon, int numberOfGuessesPlayed) {
+        if (playerWon) {
+            System.out.println("Congratulations, you won in " + numberOfGuessesPlayed + " guesses!");
+        } else {
+            System.out.println("Game over, you lost, sorry :-(, the code was  " + code);
+        }
+
+        System.exit(0);
     }
 }

@@ -93,6 +93,7 @@ public class Mastermind {
     private void play() {
         System.out.println("Game starting!");
 
+        boolean playerWon = false;
         int numberOfGuessesLeft = maximumNumberOfGuesses;
         while (numberOfGuessesLeft > 0) {
             guesser.informNumberOfGuessesLeft(numberOfGuessesLeft);
@@ -104,15 +105,15 @@ public class Mastermind {
             }
 
             if (codeCreator.guessWasCorrect(guess)) {
-                guesser.informCorrectGuess();
-                System.exit(0);
+                playerWon = true;
+                break;
             }
 
             guesser.informResult(codeCreator.calculateResult(guess));
             numberOfGuessesLeft--;
         }
 
-        guesser.informGameOver(codeCreator.getCode());
+        guesser.informGameOver(codeCreator.getCode(), playerWon, maximumNumberOfGuesses - numberOfGuessesLeft + 1);
     }
 
     public static void main (String[] args) {
