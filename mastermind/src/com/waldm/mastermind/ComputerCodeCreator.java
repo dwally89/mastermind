@@ -14,11 +14,6 @@ public class ComputerCodeCreator implements CodeCreator{
     }
 
     @Override
-    public Result calculateResult(String guess) {
-        return Result.calculateResult(guess, code);
-    }
-
-    @Override
     public boolean guessWasCorrect(String guess) {
         return guess.equals(code);
     }

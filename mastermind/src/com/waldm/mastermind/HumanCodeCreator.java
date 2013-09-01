@@ -2,14 +2,11 @@ package com.waldm.mastermind;
 
 public class HumanCodeCreator implements CodeCreator {
     private final UserInterface userInterface;
+    private final String code;
 
     public HumanCodeCreator(UserInterface userInterface) {
         this.userInterface = userInterface;
-    }
-
-    @Override
-    public String getCode() {
-        return userInterface.getCode();
+        code = userInterface.askHumanForCode();
     }
 
     @Override
@@ -18,7 +15,7 @@ public class HumanCodeCreator implements CodeCreator {
     }
 
     @Override
-    public Result calculateResult(String guess) {
-        return userInterface.calculateResult(guess);
+    public String getCode() {
+        return code;
     }
 }

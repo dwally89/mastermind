@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ComputerPlayer implements Player {
+public class ComputerPlayer implements CommandLinePlayer {
     private List<String> possibilities = new ArrayList<String>();
     private String currentGuess;
 

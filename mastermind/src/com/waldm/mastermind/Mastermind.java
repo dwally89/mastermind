@@ -4,44 +4,50 @@ public class Mastermind {
     public final int codeLength;
     public final char[] alphabet;
     private final int maximumNumberOfGuesses;
+    private int numberOfGuessesLeft;
     private CodeCreator codeCreator;
-    private Player guesser;
 
     public Mastermind(int codeLength, char[] alphabet, int maximumNumberOfGuesses) {
         this.codeLength = codeLength;
         this.alphabet = alphabet;
         this.maximumNumberOfGuesses = maximumNumberOfGuesses;
+        this.numberOfGuessesLeft = maximumNumberOfGuesses;
     }
 
-    public void play() {
-        boolean playerWon = false;
-        int numberOfGuessesLeft = maximumNumberOfGuesses;
-        while (numberOfGuessesLeft > 0) {
-            guesser.informNumberOfGuessesLeft(numberOfGuessesLeft);
-            String guess = guesser.requestGuess(codeLength, alphabet);
-
-            if (guess.length() != codeLength) {
-                guesser.informIncorrectLength(codeLength);
-                continue;
-            }
-
-            if (codeCreator.guessWasCorrect(guess)) {
-                playerWon = true;
-                break;
-            }
-
-            guesser.informResult(codeCreator.calculateResult(guess));
-            numberOfGuessesLeft--;
+    public boolean guessCode(String guess) throws IncorrectGuessLengthException {
+        if (guess.length() != codeLength) {
+            throw new IncorrectGuessLengthException(codeLength);
         }
 
-        guesser.informGameOver(codeCreator.getCode(), playerWon, maximumNumberOfGuesses - numberOfGuessesLeft + 1);
+        numberOfGuessesLeft--;
+        return codeCreator.guessWasCorrect(guess);
     }
 
     public void setCodeCreator(CodeCreator codeCreator) {
         this.codeCreator = codeCreator;
     }
 
-    public void setGuesser(Player guesser) {
-        this.guesser = guesser;
+    public int getNumberOfGuessesLeft() {
+        return numberOfGuessesLeft;
+    }
+
+    public Result calculateResult(String guess) {
+        return Result.calculateResult(guess, codeCreator.getCode());
+    }
+
+    public String getCode() {
+        return codeCreator.getCode();
+    }
+
+    public int getNumberOfGuessesPlayed() {
+        return maximumNumberOfGuesses - numberOfGuessesLeft + 1;
+    }
+
+    public class IncorrectGuessLengthException extends Exception {
+        public final int codeLength;
+
+        public IncorrectGuessLengthException(int codeLength) {
+            this.codeLength = codeLength;
+        }
     }
 }

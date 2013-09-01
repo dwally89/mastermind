@@ -5,17 +5,39 @@ import java.io.IOException;
 public class CommandLineInterface implements UserInterface {
     private final Mastermind mastermind;
 
-    public CommandLineInterface() {
-        displayWelcomeMessage();
+    private CommandLineInterface() {
         mastermind = new Mastermind(getCodeLength(), getAlphabet(), getMaximumNumberOfGuesses());
         mastermind.setCodeCreator(getCodeCreator());
-        mastermind.setGuesser(getGuesser());
+
+        CommandLinePlayer guesser = getGuesser();
+        displayWelcomeMessage();
         alertGameStarting();
-        mastermind.play();
+
+        while (true) {
+            boolean guessIsValid = false;
+            boolean guessWasCorrect = false;
+            String guess = null;
+            while (!guessIsValid) {
+                try {
+                    guess = guesser.requestGuess(mastermind.codeLength, mastermind.alphabet);
+                    guessWasCorrect = mastermind.guessCode(guess);
+                    guessIsValid = true;
+                } catch (Mastermind.IncorrectGuessLengthException e) {
+                    System.out.println("Guesses must contain " + e.codeLength + " characters");
+                }
+            }
+
+            if (guessWasCorrect) {
+                guesser.informGameOver(mastermind.getCode(), true, mastermind.getNumberOfGuessesPlayed());
+            } else if (mastermind.getNumberOfGuessesLeft() == 0) {
+                guesser.informGameOver(mastermind.getCode(), false, mastermind.getNumberOfGuessesPlayed());
+            } else {
+                guesser.informResult(mastermind.calculateResult(guess));
+            }
+        }
     }
 
-    @Override
-    public Player getGuesser() {
+    private CommandLinePlayer getGuesser() {
         System.out.println("Who will be guessing the code?");
         System.out.println("Enter H for human or C for computer");
         String guesserString;
@@ -26,14 +48,13 @@ public class CommandLineInterface implements UserInterface {
         }
 
         if (guesserString.equals("H")) {
-            return new HumanPlayer(this);
+            return new CommandLineHumanPlayer(this);
         } else {
             return new ComputerPlayer(mastermind.codeLength, mastermind.alphabet);
         }
     }
 
-    @Override
-    public CodeCreator getCodeCreator() {
+    private CodeCreator getCodeCreator() {
         System.out.println("Who will be creating the code?");
         System.out.println("Enter H for human or C for computer");
         String codeCreatorString;
@@ -50,8 +71,7 @@ public class CommandLineInterface implements UserInterface {
         }
     }
 
-    @Override
-    public int getMaximumNumberOfGuesses() {
+    private int getMaximumNumberOfGuesses() {
         System.out.println("What is the maximum number of guesses allowed? ");
         try {
             return Integer.parseInt(Utils.readStringFromConsole());
@@ -60,8 +80,7 @@ public class CommandLineInterface implements UserInterface {
         }
     }
 
-    @Override
-    public char[] getAlphabet() {
+    private char[] getAlphabet() {
         System.out.println("What letters/numbers can the code contain?");
         System.out.println("Enter the letters/numbers as a continuous string, with no spaces or commas");
         String alphabetString;
@@ -79,8 +98,7 @@ public class CommandLineInterface implements UserInterface {
         return newAlphabet;
     }
 
-    @Override
-    public int getCodeLength() {
+    private int getCodeLength() {
         System.out.println("How long should the code be? ");
         try {
             return Integer.parseInt(Utils.readStringFromConsole());
@@ -100,20 +118,6 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public String getCode() {
-        System.out.println("What was the code? ");
-        String code;
-
-        try {
-            code = Utils.readStringFromConsole();
-        } catch (IOException e) {
-            throw new RuntimeException("An input error has occurred");
-        }
-
-        return code;
-    }
-
-    @Override
     public boolean askIfGuessWasCorrect(String guess) {
         System.out.println("The guess was: " + guess);
         System.out.println("Was this correct? (Y/N): ");
@@ -126,45 +130,6 @@ public class CommandLineInterface implements UserInterface {
         }
 
         return answer.equals("Y");
-    }
-
-    @Override
-    public Result calculateResult(String guess) {
-        int rightPosition, wrongPosition;
-
-        try {
-            System.out.println("How many were correct and in the right position? ");
-            rightPosition = Integer.parseInt(Utils.readStringFromConsole());
-            System.out.println("How many were correct but in the wrong position? ");
-            wrongPosition = Integer.parseInt(Utils.readStringFromConsole());
-        } catch (IOException e) {
-            throw new RuntimeException("An input error has occurred");
-        }
-
-        return new Result(rightPosition, wrongPosition);
-    }
-
-    @Override
-    public String requestGuess(int codeLength, char[] alphabet) {
-        String alphabetString = "[";
-        for (int i = 0; i < alphabet.length; i++) {
-            if (i != 0) {
-                alphabetString += ", ";
-            }
-            alphabetString += alphabet[i];
-        }
-        alphabetString += "]";
-
-        System.out.println("Choose a " + codeLength + " character code, permissible characters being: " + alphabetString + ": ");
-
-        String guess;
-        try {
-            guess = Utils.readStringFromConsole();
-        } catch (IOException e) {
-            throw new RuntimeException("An input error has occurred");
-        }
-
-        return guess;
     }
 
     @Override
@@ -225,6 +190,38 @@ public class CommandLineInterface implements UserInterface {
         }
 
         System.exit(0);
+    }
+
+    @Override
+    public String askHumanForCode() {
+        System.out.println("What is the code? The computer will not be told this...");
+        try {
+            return Utils.readStringFromConsole();
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't read from console");
+        }
+    }
+
+    public String requestGuess(int codeLength, char[] alphabet) {
+        String alphabetString = "[";
+        for (int i = 0; i < alphabet.length; i++) {
+            if (i != 0) {
+                alphabetString += ", ";
+            }
+            alphabetString += alphabet[i];
+        }
+        alphabetString += "]";
+
+        System.out.println("Choose a " + codeLength + " character code, permissible characters being: " + alphabetString + ": ");
+
+        String guess;
+        try {
+            guess = Utils.readStringFromConsole();
+        } catch (IOException e) {
+            throw new RuntimeException("An input error has occurred");
+        }
+
+        return guess;
     }
 
     public static void main(String[] args) {

@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import com.waldm.mastermind.*;
 
-public class MyActivity extends Activity implements UserInterface {
-    private final int CODE_LENGTH = 4;
-    private final char[] ALPHABET = new char[]{'R', 'O', 'Y', 'G', 'B', 'P'};
-    private int MAXIMUM_NUMBER_OF_GUESSES = 12;
-    private Player guesser;
-    private CodeCreator codeCreator;
+public class MainActivity extends Activity implements UserInterface {
+    private Mastermind mastermind;
+    private EditText inputBox;
+    private Button guessEntered;
 
     /**
      * Called when the activity is first created.
@@ -20,42 +21,51 @@ public class MyActivity extends Activity implements UserInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        inputBox = (EditText)findViewById(R.id.inputBox);
+        guessEntered = (Button) findViewById(R.id.buttonGuessEntered);
+        guessEntered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleGuess();
+            }
+        });
 
+        final int codeLength = 4;
+        final char[] alphabet = new char[]{'R', 'O', 'Y', 'G', 'B', 'P'};
+        mastermind = new Mastermind(codeLength, alphabet, 12);
+        mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
         displayWelcomeMessage();
-
-        guesser = new HumanPlayer(this);
-        codeCreator = new ComputerCodeCreator(CODE_LENGTH, ALPHABET);
-
-        Mastermind mastermind = new Mastermind(getCodeLength(), getAlphabet(), getMaximumNumberOfGuesses());
-        mastermind.setCodeCreator(getCodeCreator());
-        mastermind.setGuesser(getGuesser());
         alertGameStarting();
-        mastermind.play();
     }
 
-    @Override
-    public Player getGuesser() {
-        return guesser;
-    }
+    private void handleGuess() {
+        String guess = inputBox.getText().toString();
 
-    @Override
-    public CodeCreator getCodeCreator() {
-        return codeCreator;
-    }
+        boolean guessWasCorrect = false;
+        try {
+            guessWasCorrect = mastermind.guessCode(guess);
+        } catch (Mastermind.IncorrectGuessLengthException e) {
+            // This can't occur with app UI
+        }
 
-    @Override
-    public int getMaximumNumberOfGuesses() {
-        return MAXIMUM_NUMBER_OF_GUESSES;
-    }
+        if (guessWasCorrect) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Congratulations, you won!");
+            builder.show();
+            guessEntered.setEnabled(false);
+        } else if (mastermind.getNumberOfGuessesLeft() == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Sorry, you lost");
+            builder.show();
+            guessEntered.setEnabled(false);
+        } else {
+            Result result = mastermind.calculateResult(guess);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You got " + result.locationCorrect + " correct and in the right place and " + result.numberCorrect + " correct but in the wrong place");
+            builder.show();
+        }
 
-    @Override
-    public char[] getAlphabet() {
-        return ALPHABET;
-    }
-
-    @Override
-    public int getCodeLength() {
-        return CODE_LENGTH;
+        inputBox.setText("");
     }
 
     @Override
@@ -64,11 +74,6 @@ public class MyActivity extends Activity implements UserInterface {
     @Override
     public void displayWelcomeMessage() {
         new AlertDialog.Builder(this).setMessage(R.string.welcome_message).show();
-    }
-
-    @Override
-    public String getCode() {
-        return getCodeCreator().getCode();
     }
 
     @Override
@@ -91,16 +96,6 @@ public class MyActivity extends Activity implements UserInterface {
         builder.show();
 
         return true;
-    }
-
-    @Override
-    public Result calculateResult(String guess) {
-        return Result.calculateResult(guess, getCode());
-    }
-
-    @Override
-    public String requestGuess(int codeLength, char[] alphabet) {
-        return "RRRR"; //TODO change this
     }
 
     @Override
@@ -128,5 +123,10 @@ public class MyActivity extends Activity implements UserInterface {
 
         builder.setMessage(message);
         builder.show();
+    }
+
+    @Override
+    public String askHumanForCode() {
+        return null;//TODO
     }
 }

@@ -1,9 +1,9 @@
 package com.waldm.mastermind;
 
-public class HumanPlayer implements Player {
-    private final UserInterface userInterface;
+public class CommandLineHumanPlayer implements CommandLinePlayer {
+    private final CommandLineInterface userInterface;
 
-    public HumanPlayer(UserInterface userInterface) {
+    public CommandLineHumanPlayer(CommandLineInterface userInterface) {
         this.userInterface = userInterface;
     }
 
