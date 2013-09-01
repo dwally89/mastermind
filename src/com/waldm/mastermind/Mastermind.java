@@ -1,28 +1,19 @@
 package com.waldm.mastermind;
 
 public class Mastermind {
-    private final int codeLength;
-    private final char[] alphabet;
+    public final int codeLength;
+    public final char[] alphabet;
     private final int maximumNumberOfGuesses;
-    private final Player guesser;
-    private final CodeCreator codeCreator;
-    private final UserInterface userInterface;
+    private CodeCreator codeCreator;
+    private Player guesser;
 
-    public Mastermind() {
-        userInterface = new CommandLineInterface();
-        userInterface.displayWelcomeMessage();
-        codeLength = userInterface.askForCodeLength();
-        alphabet = userInterface.askForAlphabet();
-        maximumNumberOfGuesses = userInterface.askForMaximumNumberOfGuesses();
-        codeCreator = userInterface.askForCodeCreator();
-        guesser = userInterface.askForGuesser();
-
-        play();
+    public Mastermind(int codeLength, char[] alphabet, int maximumNumberOfGuesses) {
+        this.codeLength = codeLength;
+        this.alphabet = alphabet;
+        this.maximumNumberOfGuesses = maximumNumberOfGuesses;
     }
 
-    private void play() {
-        userInterface.alertGameStarting();
-
+    public void play() {
         boolean playerWon = false;
         int numberOfGuessesLeft = maximumNumberOfGuesses;
         while (numberOfGuessesLeft > 0) {
@@ -46,7 +37,11 @@ public class Mastermind {
         guesser.informGameOver(codeCreator.getCode(), playerWon, maximumNumberOfGuesses - numberOfGuessesLeft + 1);
     }
 
-    public static void main (String[] args) {
-        new Mastermind();
+    public void setCodeCreator(CodeCreator codeCreator) {
+        this.codeCreator = codeCreator;
+    }
+
+    public void setGuesser(Player guesser) {
+        this.guesser = guesser;
     }
 }

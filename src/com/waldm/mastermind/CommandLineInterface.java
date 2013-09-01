@@ -3,8 +3,16 @@ package com.waldm.mastermind;
 import java.io.IOException;
 
 public class CommandLineInterface implements UserInterface {
-    private int codeLength;
-    private char[] alphabet;
+    private final Mastermind mastermind;
+
+    public CommandLineInterface() {
+        displayWelcomeMessage();
+        mastermind = new Mastermind(askForCodeLength(), askForAlphabet(), askForMaximumNumberOfGuesses());
+        mastermind.setCodeCreator(askForCodeCreator());
+        mastermind.setGuesser(askForGuesser());
+        alertGameStarting();
+        mastermind.play();
+    }
 
     @Override
     public Player askForGuesser() {
@@ -20,7 +28,7 @@ public class CommandLineInterface implements UserInterface {
         if (guesserString.equals("H")) {
             return new HumanPlayer(this);
         } else {
-            return new ComputerPlayer(codeLength, alphabet);
+            return new ComputerPlayer(mastermind.codeLength, mastermind.alphabet);
         }
     }
 
@@ -38,7 +46,7 @@ public class CommandLineInterface implements UserInterface {
         if (codeCreatorString.equals("H")) {
             return new HumanCodeCreator(this);
         } else {
-            return new ComputerCodeCreator(codeLength, alphabet);
+            return new ComputerCodeCreator(mastermind.codeLength, mastermind.alphabet);
         }
     }
 
@@ -68,7 +76,6 @@ public class CommandLineInterface implements UserInterface {
             newAlphabet[i] = alphabetString.charAt(i);
         }
 
-        alphabet = newAlphabet;
         return newAlphabet;
     }
 
@@ -76,8 +83,7 @@ public class CommandLineInterface implements UserInterface {
     public int askForCodeLength() {
         System.out.println("How long should the code be? ");
         try {
-            codeLength = Integer.parseInt(Utils.readStringFromConsole());
-            return codeLength;
+            return Integer.parseInt(Utils.readStringFromConsole());
         } catch (IOException e) {
             throw new RuntimeException("Unable to read from console");
         }
@@ -219,5 +225,9 @@ public class CommandLineInterface implements UserInterface {
         }
 
         System.exit(0);
+    }
+
+    public static void main(String[] args) {
+        new CommandLineInterface();
     }
 }
