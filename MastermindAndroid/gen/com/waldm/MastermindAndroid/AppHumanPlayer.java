@@ -1,6 +1,5 @@
-package com.example.MastermindAndroid;
+package com.waldm.MastermindAndroid;
 
-import android.content.Context;
 import com.waldm.mastermind.Player;
 
 public class AppHumanPlayer implements Player {

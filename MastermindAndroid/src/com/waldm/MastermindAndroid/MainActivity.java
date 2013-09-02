@@ -1,4 +1,4 @@
-package com.example.MastermindAndroid;
+package com.waldm.MastermindAndroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
