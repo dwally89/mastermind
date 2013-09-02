@@ -3,13 +3,32 @@ package com.waldm.MastermindAndroid;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import com.waldm.mastermind.*;
+import android.widget.LinearLayout;
+import com.waldm.MastermindAndroid.views.Peg;
+import com.waldm.MastermindAndroid.views.PegRow;
+import com.waldm.mastermind.Mastermind;
+import com.waldm.mastermind.Result;
+import com.waldm.mastermind.UserInterface;
 
-public class MainActivity extends Activity implements UserInterface {
+import java.util.*;
+
+public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
+    private enum Colour {
+        RED,
+        ORANGE,
+        YELLOW,
+        GREEN,
+        BLUE,
+        PURPLE
+    }
+
+    private Map<Colour, Drawable> colourDrawables;
     private Mastermind mastermind;
     private EditText inputBox;
     private Button guessEntered;
@@ -21,6 +40,33 @@ public class MainActivity extends Activity implements UserInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+
+        final int codeLength = 4;
+        List<Drawable> backgrounds = new ArrayList<Drawable>();
+        for (int i = 0; i < codeLength; i++) {
+            backgrounds.add(getResources().getDrawable(R.drawable.unused_peg));
+        }
+
+        final int maximumNumberOfGuesses = 12;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        params.weight = 1;
+        for (int rowIndex = 0; rowIndex < maximumNumberOfGuesses; rowIndex++) {
+            mainLayout.addView(new PegRow(this, backgrounds), params);
+        }
+
+        mainLayout.addView(new PegRow(this, backgrounds, this), params);
+
+        colourDrawables = new HashMap<Colour, Drawable>();
+        colourDrawables.put(Colour.RED, getResources().getDrawable(R.drawable.red_peg));
+        colourDrawables.put(Colour.ORANGE, getResources().getDrawable(R.drawable.orange_peg));
+        colourDrawables.put(Colour.YELLOW, getResources().getDrawable(R.drawable.yellow_peg));
+        colourDrawables.put(Colour.GREEN, getResources().getDrawable(R.drawable.green_peg));
+        colourDrawables.put(Colour.BLUE, getResources().getDrawable(R.drawable.blue_peg));
+        colourDrawables.put(Colour.PURPLE, getResources().getDrawable(R.drawable.purple_peg));
+
+        /*
         inputBox = (EditText)findViewById(R.id.inputBox);
         guessEntered = (Button) findViewById(R.id.buttonGuessEntered);
         guessEntered.setOnClickListener(new View.OnClickListener() {
@@ -32,10 +78,11 @@ public class MainActivity extends Activity implements UserInterface {
 
         final int codeLength = 4;
         final char[] alphabet = new char[]{'R', 'O', 'Y', 'G', 'B', 'P'};
-        mastermind = new Mastermind(codeLength, alphabet, 12);
+        mastermind = new Mastermind(codeLength, alphabet, maximumNumberOfGuesses);
         mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
         displayWelcomeMessage();
         alertGameStarting();
+        */
     }
 
     private void handleGuess() {
@@ -129,4 +176,15 @@ public class MainActivity extends Activity implements UserInterface {
     public String askHumanForCode() {
         return null;//TODO
     }
+
+    @Override
+    public void displayColourPicker(View peg) {
+        final List<Colour> VALUES = Collections.unmodifiableList(Arrays.asList(Colour.values()));
+        final int SIZE = VALUES.size();
+        final Random RANDOM = new Random();
+
+        peg.setBackgroundDrawable(colourDrawables.get(VALUES.get(RANDOM.nextInt(SIZE))));
+    }
 }
+
+
