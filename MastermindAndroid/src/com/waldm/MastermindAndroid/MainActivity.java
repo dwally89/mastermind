@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import com.waldm.MastermindAndroid.views.Peg;
 import com.waldm.MastermindAndroid.views.PegRow;
+import com.waldm.mastermind.ComputerCodeCreator;
 import com.waldm.mastermind.Mastermind;
 import com.waldm.mastermind.Result;
 import com.waldm.mastermind.UserInterface;
@@ -19,19 +19,21 @@ import com.waldm.mastermind.UserInterface;
 import java.util.*;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
-    private enum Colour {
+    public enum Colour {
         RED,
         ORANGE,
         YELLOW,
         GREEN,
         BLUE,
-        PURPLE
+        PURPLE,
+        GREY
     }
 
-    private Map<Colour, Drawable> colourDrawables;
+    public static Map<Colour, Drawable> colourDrawables;
     private Mastermind mastermind;
-    private EditText inputBox;
+    private PegRow guessRow;
     private Button guessEntered;
+    private List<PegRow> pegRows = new ArrayList<PegRow>();
 
     /**
      * Called when the activity is first created.
@@ -44,19 +46,26 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
 
         final int codeLength = 4;
-        List<Drawable> backgrounds = new ArrayList<Drawable>();
-        for (int i = 0; i < codeLength; i++) {
-            backgrounds.add(getResources().getDrawable(R.drawable.unused_peg));
-        }
-
         final int maximumNumberOfGuesses = 12;
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         params.weight = 1;
-        for (int rowIndex = 0; rowIndex < maximumNumberOfGuesses; rowIndex++) {
-            mainLayout.addView(new PegRow(this, backgrounds), params);
-        }
 
-        mainLayout.addView(new PegRow(this, backgrounds, this), params);
+        List<Drawable> backgrounds = createRows(mainLayout, codeLength, maximumNumberOfGuesses, params);
+
+        guessRow = new PegRow(this, backgrounds, this);
+        mainLayout.addView(guessRow, params);
+
+        guessEntered = new Button(this);
+        guessEntered.setText("Guess"); // TODO Change this to string resource
+        guessEntered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleGuess();
+            }
+        });
+
+        mainLayout.addView(guessEntered);
 
         colourDrawables = new HashMap<Colour, Drawable>();
         colourDrawables.put(Colour.RED, getResources().getDrawable(R.drawable.red_peg));
@@ -66,27 +75,41 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         colourDrawables.put(Colour.BLUE, getResources().getDrawable(R.drawable.blue_peg));
         colourDrawables.put(Colour.PURPLE, getResources().getDrawable(R.drawable.purple_peg));
 
-        /*
-        inputBox = (EditText)findViewById(R.id.inputBox);
-        guessEntered = (Button) findViewById(R.id.buttonGuessEntered);
-        guessEntered.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleGuess();
-            }
-        });
-
-        final int codeLength = 4;
         final char[] alphabet = new char[]{'R', 'O', 'Y', 'G', 'B', 'P'};
         mastermind = new Mastermind(codeLength, alphabet, maximumNumberOfGuesses);
         mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
         displayWelcomeMessage();
         alertGameStarting();
-        */
+    }
+
+    private List<Drawable> createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
+        List<Drawable> backgrounds = new ArrayList<Drawable>();
+        for (int i = 0; i < codeLength; i++) {
+            backgrounds.add(getResources().getDrawable(R.drawable.unused_peg));
+        }
+
+        for (int rowIndex = 0; rowIndex < maximumNumberOfGuesses; rowIndex++) {
+            PegRow pegRow = new PegRow(this, backgrounds);
+            pegRows.add(pegRow);
+            mainLayout.addView(pegRow, params);
+        }
+        return backgrounds;
     }
 
     private void handleGuess() {
-        String guess = inputBox.getText().toString();
+        List<Peg> guessedPegs = guessRow.getPegs();
+        String guess = "";
+        for (Peg peg : guessedPegs) {
+            Colour colour = peg.getColour();
+            if (colour == Colour.GREY) {
+                return;
+            }
+
+            guess += colour.name().charAt(0);
+        }
+
+        PegRow currentRow = pegRows.get(pegRows.size() - mastermind.getNumberOfGuessesPlayed());
+        currentRow.setColours(guessedPegs);
 
         boolean guessWasCorrect = false;
         try {
@@ -107,12 +130,8 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             guessEntered.setEnabled(false);
         } else {
             Result result = mastermind.calculateResult(guess);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("You got " + result.locationCorrect + " correct and in the right place and " + result.numberCorrect + " correct but in the wrong place");
-            builder.show();
+            currentRow.setResult(result);
         }
-
-        inputBox.setText("");
     }
 
     @Override
@@ -178,12 +197,15 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     }
 
     @Override
-    public void displayColourPicker(View peg) {
-        final List<Colour> VALUES = Collections.unmodifiableList(Arrays.asList(Colour.values()));
-        final int SIZE = VALUES.size();
-        final Random RANDOM = new Random();
+    public void displayColourPicker(Peg peg) {
+        final List<Colour> values = Collections.unmodifiableList(Arrays.asList(Colour.values()));
+        int nextIndex = values.indexOf(peg.getColour()) + 1;
+        if (nextIndex == values.size()) {
+            nextIndex = 0;
+        }
 
-        peg.setBackgroundDrawable(colourDrawables.get(VALUES.get(RANDOM.nextInt(SIZE))));
+        Colour newColour = values.get(nextIndex);
+        peg.setColour(newColour, colourDrawables.get(newColour));
     }
 }
 
