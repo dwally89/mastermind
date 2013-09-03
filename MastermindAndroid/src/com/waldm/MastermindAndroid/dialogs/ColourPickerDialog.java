@@ -33,8 +33,9 @@ public class ColourPickerDialog extends ListActivity {
                 convertView = inflater.inflate(R.layout.list_item_peg, parent, false);
             }
 
-            TextView text = (TextView)convertView.findViewById(R.id.text);
-            text.setText(getItem(position).get(COLOUR_KEY).toString());
+            TextView textView = (TextView)convertView.findViewById(R.id.text);
+            String text = getItem(position).get(COLOUR_KEY).toString();
+            textView.setText(String.valueOf(text.charAt(0)).toUpperCase() + text.substring(1).toLowerCase());
 
             ImageView image = (ImageView)convertView.findViewById(R.id.image);
             image.setImageResource((Integer) getItem(position).get(IMAGE_KEY));
