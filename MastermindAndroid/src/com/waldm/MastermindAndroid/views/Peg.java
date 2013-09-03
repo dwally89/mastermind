@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.waldm.MastermindAndroid.MainActivity;
 
-public class Peg extends View {
+public class Peg extends ImageView {
     private MainActivity.Colour colour;
 
     public interface PegClickListener {
@@ -16,7 +17,7 @@ public class Peg extends View {
 
     public Peg(Context context, Drawable background) {
         super(context);
-        setBackgroundDrawable(background);
+        setImageDrawable(background);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         setLayoutParams(params);
@@ -37,6 +38,6 @@ public class Peg extends View {
     }
     public void setColour(MainActivity.Colour colour, Drawable drawable) {
         this.colour = colour;
-        setBackgroundDrawable(drawable);
+        setImageDrawable(drawable);
     }
 }
