@@ -36,8 +36,8 @@ public class Peg extends ImageView {
     public MainActivity.Colour getColour() {
         return colour;
     }
-    public void setColour(MainActivity.Colour colour, Drawable drawable) {
+    public void setColour(MainActivity.Colour colour, int drawable) {
         this.colour = colour;
-        setImageDrawable(drawable);
+        setImageResource(drawable);
     }
 }

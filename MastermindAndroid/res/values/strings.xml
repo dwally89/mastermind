@@ -3,4 +3,5 @@
     <string name="app_name">Mastermind</string>
     <string name="welcome_message">Welcome to Mastermind!</string>
     <string name="question_correct_guess">Was the guess correct?</string>
+    <string name="colour_picker_title">Colour Picker</string>
 </resources>

@@ -1,11 +1,12 @@
 package com.waldm.mastermind;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.Random;
 
 public class ComputerPlayer implements CommandLinePlayer {
-    private List<String> possibilities = new ArrayList<String>();
+    private List<String> possibilities = Lists.newArrayList();
     private String currentGuess;
 
     public ComputerPlayer(int codeLength, char[] alphabet) {
@@ -13,7 +14,7 @@ public class ComputerPlayer implements CommandLinePlayer {
     }
 
     private List<String> generatePossibilities(int codeLength, char[] alphabet) {
-        List<String> additionalPossibilities = new ArrayList<String>();
+        List<String> additionalPossibilities = Lists.newArrayList();
 
         for (char c : alphabet) {
             if (codeLength == 1){
@@ -43,7 +44,7 @@ public class ComputerPlayer implements CommandLinePlayer {
 
     @Override
     public void informResult(final Result result) {
-        List<String> newPossibilities = new ArrayList<String>();
+        List<String> newPossibilities = Lists.newArrayList();
         Result possibilityResult;
         for (String possibility : possibilities) {
             possibilityResult = Result.calculateResult(possibility, currentGuess);

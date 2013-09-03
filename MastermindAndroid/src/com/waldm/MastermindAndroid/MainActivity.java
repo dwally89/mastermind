@@ -3,12 +3,17 @@ package com.waldm.MastermindAndroid;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+import com.waldm.MastermindAndroid.dialogs.ColourPickerDialog;
 import com.waldm.MastermindAndroid.views.Peg;
 import com.waldm.MastermindAndroid.views.PegRow;
 import com.waldm.mastermind.ComputerCodeCreator;
@@ -16,7 +21,7 @@ import com.waldm.mastermind.Mastermind;
 import com.waldm.mastermind.Result;
 import com.waldm.mastermind.UserInterface;
 
-import java.util.*;
+import java.util.List;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
     public enum Colour {
@@ -25,15 +30,23 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         YELLOW,
         GREEN,
         BLUE,
-        PURPLE,
-        GREY
+        PURPLE
     }
 
-    public static Map<Colour, Drawable> colourDrawables;
+    public static ImmutableSortedMap<Colour, Integer> colourDrawableIds = new ImmutableSortedMap.Builder<Colour, Integer>(Ordering.natural())
+                                                                        .put(Colour.RED, R.drawable.red_peg)
+                                                                        .put(Colour.ORANGE, R.drawable.orange_peg)
+                                                                        .put(Colour.YELLOW, R.drawable.yellow_peg)
+                                                                        .put(Colour.GREEN, R.drawable.green_peg)
+                                                                        .put(Colour.BLUE, R.drawable.blue_peg)
+                                                                        .put(Colour.PURPLE, R.drawable.purple_peg)
+                                                                        .build();
     private Mastermind mastermind;
     private PegRow guessRow;
     private Button guessEntered;
-    private List<PegRow> pegRows = new ArrayList<PegRow>();
+    private List<PegRow> pegRows = Lists.newArrayList();
+    private Peg selectedPeg;
+    private static final int PICK_COLOUR = 1990;
 
     /**
      * Called when the activity is first created.
@@ -67,14 +80,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
         mainLayout.addView(guessEntered);
 
-        colourDrawables = new HashMap<Colour, Drawable>();
-        colourDrawables.put(Colour.RED, getResources().getDrawable(R.drawable.red_peg));
-        colourDrawables.put(Colour.ORANGE, getResources().getDrawable(R.drawable.orange_peg));
-        colourDrawables.put(Colour.YELLOW, getResources().getDrawable(R.drawable.yellow_peg));
-        colourDrawables.put(Colour.GREEN, getResources().getDrawable(R.drawable.green_peg));
-        colourDrawables.put(Colour.BLUE, getResources().getDrawable(R.drawable.blue_peg));
-        colourDrawables.put(Colour.PURPLE, getResources().getDrawable(R.drawable.purple_peg));
-
         final char[] alphabet = new char[]{'R', 'O', 'Y', 'G', 'B', 'P'};
         mastermind = new Mastermind(codeLength, alphabet, maximumNumberOfGuesses);
         mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
@@ -83,7 +88,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     }
 
     private List<Drawable> createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
-        List<Drawable> backgrounds = new ArrayList<Drawable>();
+        List<Drawable> backgrounds = Lists.newArrayList();
         for (int i = 0; i < codeLength; i++) {
             backgrounds.add(getResources().getDrawable(R.drawable.unused_peg));
         }
@@ -101,10 +106,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         String guess = "";
         for (Peg peg : guessedPegs) {
             Colour colour = peg.getColour();
-            if (colour == Colour.GREY) {
-                return;
-            }
-
             guess += colour.name().charAt(0);
         }
 
@@ -198,14 +199,18 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
     @Override
     public void displayColourPicker(Peg peg) {
-        final List<Colour> values = Collections.unmodifiableList(Arrays.asList(Colour.values()));
-        int nextIndex = values.indexOf(peg.getColour()) + 1;
-        if (nextIndex == values.size()) {
-            nextIndex = 0;
-        }
+        selectedPeg = peg;
+        Intent intent = new Intent(this, ColourPickerDialog.class);
+        startActivityForResult(intent, PICK_COLOUR);
+    }
 
-        Colour newColour = values.get(nextIndex);
-        peg.setColour(newColour, colourDrawables.get(newColour));
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == ColourPickerDialog.COLOUR_PICKED && requestCode == PICK_COLOUR) {
+            int imageResource = data.getIntExtra(ColourPickerDialog.IMAGE_KEY, -1);
+            String colour = data.getStringExtra(ColourPickerDialog.COLOUR_KEY);
+            selectedPeg.setColour(Colour.valueOf(colour), imageResource);
+        }
     }
 }
 

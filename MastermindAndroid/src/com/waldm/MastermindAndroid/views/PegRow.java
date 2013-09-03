@@ -4,16 +4,16 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.google.common.collect.Lists;
 import com.waldm.MastermindAndroid.MainActivity;
 import com.waldm.mastermind.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PegRow extends LinearLayout{
     private final TextView numberInWrongPlace;
     private final TextView numberCorrect;
-    private List<Peg> pegs = new ArrayList<Peg>();
+    private List<Peg> pegs = Lists.newArrayList();
 
     public PegRow(Context context, List<Drawable> backgrounds) {
         super(context);
@@ -52,7 +52,7 @@ public class PegRow extends LinearLayout{
     public void setColours(List<Peg> colours) {
         for (int i = 0; i < pegs.size(); i++) {
             MainActivity.Colour colour = colours.get(i).getColour();
-            pegs.get(i).setColour(colour, MainActivity.colourDrawables.get(colour));
+            pegs.get(i).setColour(colour, MainActivity.colourDrawableIds.get(colour));
         }
     }
 
