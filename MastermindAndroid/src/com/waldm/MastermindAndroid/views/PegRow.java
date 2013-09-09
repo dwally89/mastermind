@@ -52,7 +52,7 @@ public class PegRow extends LinearLayout{
     public void setColours(List<Peg> colours) {
         for (int i = 0; i < pegs.size(); i++) {
             MainActivity.Colour colour = colours.get(i).getColour();
-            pegs.get(i).setColour(colour, MainActivity.colourDrawableIds.get(colour));
+            pegs.get(i).setColour(colour);
         }
     }
 
