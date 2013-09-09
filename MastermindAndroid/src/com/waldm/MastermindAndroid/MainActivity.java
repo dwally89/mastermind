@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import java.util.List;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
     public static class Colour {
+        public static final Colour GREY = new Colour("Grey", 'G', R.drawable.unused_peg);
         public final int drawableResource;
         public final String name;
         public final char shortName;
@@ -66,19 +66,20 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         params.weight = 1;
 
-        List<Drawable> backgrounds = createRows(mainLayout, codeLength, maximumNumberOfGuesses, params);
+        createRows(mainLayout, codeLength, maximumNumberOfGuesses, params);
 
-        guessRow = new PegRow(this, backgrounds, this);
+        guessRow = new PegRow(this, createRow(codeLength, this));
         mainLayout.addView(guessRow, params);
 
         guessEntered = new Button(this);
-        guessEntered.setText("Guess"); // TODO Change this to string resource
+        guessEntered.setText(R.string.button_guess);
         guessEntered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleGuess();
             }
         });
+        guessEntered.setEnabled(false);
 
         mainLayout.addView(guessEntered);
 
@@ -90,24 +91,24 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         mastermind = new Mastermind(codeLength, alphabet, maximumNumberOfGuesses);
         mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
 
-
-
         displayWelcomeMessage();
         alertGameStarting();
     }
 
-    private List<Drawable> createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
-        List<Drawable> backgrounds = Lists.newArrayList();
-        for (int i = 0; i < codeLength; i++) {
-            backgrounds.add(getResources().getDrawable(R.drawable.unused_peg));
-        }
-
+    private void createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
         for (int rowIndex = 0; rowIndex < maximumNumberOfGuesses; rowIndex++) {
-            PegRow pegRow = new PegRow(this, backgrounds);
+            PegRow pegRow = new PegRow(this, createRow(codeLength, null));
             pegRows.add(pegRow);
             mainLayout.addView(pegRow, params);
         }
-        return backgrounds;
+    }
+
+    private List<Peg> createRow(int codeLength, Peg.PegClickListener listener) {
+        List<Peg> pegs = Lists.newArrayList();
+        for (int i = 0; i < codeLength; i++) {
+            pegs.add(new Peg(this, Colour.GREY, listener));
+        }
+        return pegs;
     }
 
     private void handleGuess() {
@@ -215,15 +216,31 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ColourPickerDialog.COLOUR_PICKED && requestCode == PICK_COLOUR) {
-            String colourName = data.getStringExtra(ColourPickerDialog.COLOUR_KEY);
-            for (Colour colour : colours) {
-                if (colour.name.equals(colourName)) {
-                    selectedPeg.setColour(colour);
-                    break;
-                }
+        if (resultCode != ColourPickerDialog.COLOUR_PICKED || requestCode != PICK_COLOUR) {
+            return;
+        }
+
+        String colourName = data.getStringExtra(ColourPickerDialog.COLOUR_KEY);
+        for (Colour colour : colours) {
+            if (colour.name.equals(colourName)) {
+                selectedPeg.setColour(colour);
+                break;
             }
         }
+
+        updateGuessButtonEnabled();
+    }
+
+    private void updateGuessButtonEnabled() {
+        boolean enabled = true;
+        for (Peg peg : guessRow.getPegs()) {
+            if (peg.getColour() == Colour.GREY) {
+                enabled = false;
+                break;
+            }
+        }
+
+        guessEntered.setEnabled(enabled);
     }
 }
 

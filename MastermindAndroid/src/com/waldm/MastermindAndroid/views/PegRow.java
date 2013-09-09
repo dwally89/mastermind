@@ -1,7 +1,6 @@
 package com.waldm.MastermindAndroid.views;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.common.collect.Lists;
@@ -15,13 +14,13 @@ public class PegRow extends LinearLayout{
     private final TextView numberCorrect;
     private List<Peg> pegs = Lists.newArrayList();
 
-    public PegRow(Context context, List<Drawable> backgrounds) {
+    public PegRow(Context context, List<Peg> pegs) {
         super(context);
         setOrientation(HORIZONTAL);
 
-        for (Drawable background : backgrounds) {
-            Peg peg = new Peg(context, background);
-            pegs.add(peg);
+        this.pegs = pegs;
+
+        for (Peg peg : pegs) {
             addView(peg);
         }
 
@@ -29,20 +28,6 @@ public class PegRow extends LinearLayout{
         numberInWrongPlace = new TextView(context);
         addView(numberCorrect);
         addView(numberInWrongPlace);
-    }
-
-    public PegRow(Context context, List<Drawable> backgrounds, Peg.PegClickListener listener) {
-        super(context);
-        setOrientation(HORIZONTAL);
-
-        for (Drawable background : backgrounds) {
-            Peg peg = new Peg(context, background, listener);
-            pegs.add(peg);
-            addView(peg);
-        }
-
-        numberCorrect = null;
-        numberInWrongPlace = null;
     }
 
     public List<Peg> getPegs() {

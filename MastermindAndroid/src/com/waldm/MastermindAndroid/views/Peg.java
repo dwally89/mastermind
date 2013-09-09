@@ -1,7 +1,6 @@
 package com.waldm.MastermindAndroid.views;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,16 +14,19 @@ public class Peg extends ImageView {
         void displayColourPicker(Peg peg);
     }
 
-    public Peg(Context context, Drawable background) {
+    public Peg(Context context, MainActivity.Colour colour, final PegClickListener listener) {
         super(context);
-        setImageDrawable(background);
+
+        setImageResource(colour.drawableResource);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         setLayoutParams(params);
-    }
+        this.colour = colour;
 
-    public Peg(Context context, Drawable background, final PegClickListener listener) {
-        this(context, background);
+        if (listener == null) {
+            return;
+        }
+
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
