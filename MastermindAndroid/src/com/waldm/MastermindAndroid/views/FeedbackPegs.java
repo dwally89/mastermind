@@ -16,7 +16,7 @@ public class FeedbackPegs extends LinearLayout{
         setOrientation(HORIZONTAL);
 
         for (int i = 0; i < numberOfPegs; i++) {
-            Peg peg = new Peg(context, MainActivity.Colour.GREY, null);
+            Peg peg = new Peg(context, MainActivity.Colour.NONE, null);
             pegs.add(peg);
             addView(peg);
         }
@@ -33,6 +33,8 @@ public class FeedbackPegs extends LinearLayout{
             } else if (correctColour > 0) {
                 peg.setColour(MainActivity.Colour.WHITE);
                 correctColour--;
+            } else {
+                peg.setColour(MainActivity.Colour.GREY);
             }
         }
     }
