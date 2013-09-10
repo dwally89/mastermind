@@ -132,12 +132,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             // This can't occur with app UI
         }
 
-        if (guessWasCorrect) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Congratulations, you won!");
-            builder.show();
-            guessEntered.setEnabled(false);
-        } else if (mastermind.getNumberOfGuessesLeft() == 0) {
+        if (!guessWasCorrect && mastermind.getNumberOfGuessesLeft() == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Sorry, you lost");
             builder.show();
@@ -145,6 +140,13 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         } else {
             Result result = mastermind.calculateResult(guess);
             currentRow.setResult(result);
+        }
+
+        if (guessWasCorrect) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Congratulations, you won!");
+            builder.show();
+            guessEntered.setEnabled(false);
         }
     }
 
