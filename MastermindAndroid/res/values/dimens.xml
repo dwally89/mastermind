@@ -2,4 +2,5 @@
 <resources>
     <dimen name="peg_width">20dp</dimen>
     <dimen name="peg_height">20dp</dimen>
+    <dimen name="peg_row_margin">6dp</dimen>
 </resources>

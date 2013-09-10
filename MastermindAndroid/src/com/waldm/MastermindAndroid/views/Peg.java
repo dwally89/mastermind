@@ -17,9 +17,7 @@ public class Peg extends ImageView {
     public Peg(Context context, MainActivity.Colour colour, final PegClickListener listener) {
         super(context);
 
-        if (colour != MainActivity.Colour.NONE) {
-            setImageResource(colour.drawableResource);
-        }
+        setImageResource(colour.drawableResource);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;

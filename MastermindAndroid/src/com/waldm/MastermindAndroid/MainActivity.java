@@ -22,11 +22,12 @@ import com.waldm.mastermind.UserInterface;
 import java.util.List;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
+
     public static class Colour {
         public static final Colour GREY = new Colour("Grey", 'G', R.drawable.unused_peg);
         public static final Colour WHITE = new Colour("White", 'W', R.drawable.white_peg);
         public static final Colour BLACK = new Colour("Black", 'B', R.drawable.black_peg);
-        public static final Colour NONE = new Colour("NONE", 'N', -1);
+        public static final Colour NONE = new Colour("NONE", 'N', R.drawable.transparent_peg);
         public final int drawableResource;
         public final String name;
         public final char shortName;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     private Mastermind mastermind;
     private PegRow guessRow;
     private Button guessEntered;
+    private Button newGame;
     private List<PegRow> pegRows = Lists.newArrayList();
     private Peg selectedPeg;
     private static final int PICK_COLOUR = 1990;
@@ -61,7 +63,35 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        guessEntered = new Button(this);
+        guessEntered.setText(R.string.button_guess);
+        guessEntered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleGuess();
+            }
+        });
+        guessEntered.setEnabled(false);
+
+
+        newGame = new Button(this);
+        newGame.setText(R.string.button_new_game);
+        newGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newGame();
+            }
+        });
+
+        displayWelcomeMessage();
+        alertGameStarting();
+
+        newGame();
+    }
+
+    private void newGame() {
         final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+        mainLayout.removeAllViews();
 
         final int codeLength = 4;
         final int maximumNumberOfGuesses = 12;
@@ -73,18 +103,11 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
         guessRow = new PegRow(this, createRow(codeLength, Colour.GREY, this), false);
         mainLayout.addView(guessRow, params);
-
-        guessEntered = new Button(this);
-        guessEntered.setText(R.string.button_guess);
-        guessEntered.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleGuess();
-            }
-        });
-        guessEntered.setEnabled(false);
-
         mainLayout.addView(guessEntered);
+        guessEntered.setVisibility(View.VISIBLE);
+        guessEntered.setEnabled(false);
+        mainLayout.addView(newGame);
+        newGame.setVisibility(View.GONE);
 
         char[] alphabet = new char[colours.size()];
         for (int i = 0; i < alphabet.length; i++) {
@@ -93,9 +116,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
         mastermind = new Mastermind(codeLength, alphabet, maximumNumberOfGuesses);
         mastermind.setCodeCreator(new ComputerCodeCreator(codeLength, alphabet));
-
-        displayWelcomeMessage();
-        alertGameStarting();
     }
 
     private void createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
@@ -136,7 +156,8 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Sorry, you lost");
             builder.show();
-            guessEntered.setEnabled(false);
+            guessEntered.setVisibility(View.GONE);
+            newGame.setVisibility(View.VISIBLE);
         } else {
             Result result = mastermind.calculateResult(guess);
             currentRow.setResult(result);
@@ -146,7 +167,8 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Congratulations, you won!");
             builder.show();
-            guessEntered.setEnabled(false);
+            guessEntered.setVisibility(View.GONE);
+            newGame.setVisibility(View.VISIBLE);
         }
     }
 

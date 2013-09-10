@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import com.google.common.collect.Lists;
 import com.waldm.MastermindAndroid.MainActivity;
+import com.waldm.MastermindAndroid.R;
 import com.waldm.mastermind.Result;
 
 import java.util.List;
@@ -24,9 +25,15 @@ public class PegRow extends LinearLayout{
 
         if (showFeedbackPegs) {
             feedbackPegs = new FeedbackPegs(context, pegs.size());
-            LinearLayout.LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT);
-            params.weight = 1.5f;
-            addView(feedbackPegs, params);
+            LinearLayout.LayoutParams pegParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+            feedbackPegs.setPadding(
+                    getResources().getDimensionPixelSize(R.dimen.peg_row_margin),
+                    getResources().getDimensionPixelSize(R.dimen.peg_row_margin),
+                    getResources().getDimensionPixelSize(R.dimen.peg_row_margin),
+                    getResources().getDimensionPixelSize(R.dimen.peg_row_margin)
+                    );
+            pegParams.weight = 1.5f;
+            addView(feedbackPegs, pegParams);
         } else {
             feedbackPegs = null;
         }

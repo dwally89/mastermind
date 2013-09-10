@@ -33,8 +33,6 @@ public class FeedbackPegs extends LinearLayout{
             } else if (correctColour > 0) {
                 peg.setColour(MainActivity.Colour.WHITE);
                 correctColour--;
-            } else {
-                peg.setColour(MainActivity.Colour.GREY);
             }
         }
     }
