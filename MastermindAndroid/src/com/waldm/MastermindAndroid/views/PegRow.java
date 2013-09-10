@@ -2,7 +2,6 @@ package com.waldm.MastermindAndroid.views;
 
 import android.content.Context;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.waldm.MastermindAndroid.MainActivity;
 import com.waldm.mastermind.Result;
@@ -10,11 +9,10 @@ import com.waldm.mastermind.Result;
 import java.util.List;
 
 public class PegRow extends LinearLayout{
-    private final TextView numberInWrongPlace;
-    private final TextView numberCorrect;
+    private final FeedbackPegs feedbackPegs;
     private List<Peg> pegs = Lists.newArrayList();
 
-    public PegRow(Context context, List<Peg> pegs) {
+    public PegRow(Context context, List<Peg> pegs, boolean showFeedbackPegs) {
         super(context);
         setOrientation(HORIZONTAL);
 
@@ -24,10 +22,14 @@ public class PegRow extends LinearLayout{
             addView(peg);
         }
 
-        numberCorrect = new TextView(context);
-        numberInWrongPlace = new TextView(context);
-        addView(numberCorrect);
-        addView(numberInWrongPlace);
+        if (showFeedbackPegs) {
+            feedbackPegs = new FeedbackPegs(context, pegs.size());
+            LinearLayout.LayoutParams params = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+            params.weight = 1.5f;
+            addView(feedbackPegs, params);
+        } else {
+            feedbackPegs = null;
+        }
     }
 
     public List<Peg> getPegs() {
@@ -42,7 +44,6 @@ public class PegRow extends LinearLayout{
     }
 
     public void setResult(Result result) {
-        numberCorrect.setText("(" + result.locationCorrect + ",");
-        numberInWrongPlace.setText(result.numberCorrect + ")");
+        feedbackPegs.update(result);
     }
 }

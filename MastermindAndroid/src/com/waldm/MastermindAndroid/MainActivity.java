@@ -24,6 +24,8 @@ import java.util.List;
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
     public static class Colour {
         public static final Colour GREY = new Colour("Grey", 'G', R.drawable.unused_peg);
+        public static final Colour WHITE = new Colour("White", 'W', R.drawable.white_peg);
+        public static final Colour BLACK = new Colour("Black", 'B', R.drawable.black_peg);
         public final int drawableResource;
         public final String name;
         public final char shortName;
@@ -68,7 +70,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
         createRows(mainLayout, codeLength, maximumNumberOfGuesses, params);
 
-        guessRow = new PegRow(this, createRow(codeLength, this));
+        guessRow = new PegRow(this, createRow(codeLength, this), false);
         mainLayout.addView(guessRow, params);
 
         guessEntered = new Button(this);
@@ -97,7 +99,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
     private void createRows(LinearLayout mainLayout, int codeLength, int maximumNumberOfGuesses, LinearLayout.LayoutParams params) {
         for (int rowIndex = 0; rowIndex < maximumNumberOfGuesses; rowIndex++) {
-            PegRow pegRow = new PegRow(this, createRow(codeLength, null));
+            PegRow pegRow = new PegRow(this, createRow(codeLength, null), true);
             pegRows.add(pegRow);
             mainLayout.addView(pegRow, params);
         }
