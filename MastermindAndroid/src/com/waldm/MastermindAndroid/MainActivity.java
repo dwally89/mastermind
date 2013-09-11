@@ -177,7 +177,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
     @Override
     public void displayWelcomeMessage() {
-        new AlertDialog.Builder(this).setMessage(R.string.welcome_message).show();
+        AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.welcome_message).create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     @Override
