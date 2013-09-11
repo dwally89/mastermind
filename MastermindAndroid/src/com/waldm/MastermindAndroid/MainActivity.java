@@ -5,8 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.google.common.collect.ImmutableList;
@@ -50,7 +49,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     private Mastermind mastermind;
     private PegRow guessRow;
     private Button guessEntered;
-    private Button newGame;
     private List<PegRow> pegRows = Lists.newArrayList();
     private Peg selectedPeg;
     private static final int PICK_COLOUR = 1990;
@@ -73,20 +71,30 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         });
         guessEntered.setEnabled(false);
 
-
-        newGame = new Button(this);
-        newGame.setText(R.string.button_new_game);
-        newGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newGame();
-            }
-        });
-
         displayWelcomeMessage();
         alertGameStarting();
 
         newGame();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_game:
+                newGame();
+                return true;
+            case R.id.settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void newGame() {
@@ -106,8 +114,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         mainLayout.addView(guessEntered);
         guessEntered.setVisibility(View.VISIBLE);
         guessEntered.setEnabled(false);
-        mainLayout.addView(newGame);
-        newGame.setVisibility(View.GONE);
 
         char[] alphabet = new char[colours.size()];
         for (int i = 0; i < alphabet.length; i++) {
@@ -157,7 +163,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             builder.setMessage("Sorry, you lost");
             builder.show();
             guessEntered.setVisibility(View.GONE);
-            newGame.setVisibility(View.VISIBLE);
         } else {
             Result result = mastermind.calculateResult(guess);
             currentRow.setResult(result);
@@ -168,7 +173,6 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
             builder.setMessage("Congratulations, you won!");
             builder.show();
             guessEntered.setVisibility(View.GONE);
-            newGame.setVisibility(View.VISIBLE);
         }
     }
 
