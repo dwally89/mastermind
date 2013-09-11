@@ -8,17 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.waldm.MastermindAndroid.Colour;
 import com.waldm.MastermindAndroid.MainActivity;
 import com.waldm.MastermindAndroid.R;
 
 import java.util.List;
 
 public class ColourPickerDialog extends ListActivity {
-    public static final int COLOUR_PICKED = 1989;
     public static final String COLOUR_KEY = "ColourKey";
 
-    private class PegAdapter extends ArrayAdapter<MainActivity.Colour>{
-        public PegAdapter(Context context, List<MainActivity.Colour> array) {
+    private class PegAdapter extends ArrayAdapter<Colour>{
+        public PegAdapter(Context context, List<Colour> array) {
             super(context, 0, array);
         }
 
@@ -52,10 +52,10 @@ public class ColourPickerDialog extends ListActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                MainActivity.Colour arrayItem = MainActivity.colours.get(position);
+                Colour arrayItem = MainActivity.colours.get(position);
                 Intent intent = new Intent();
                 intent.putExtra(COLOUR_KEY, arrayItem.name);
-                setResult(COLOUR_PICKED, intent);
+                setResult(MainActivity.RESULT_COLOUR_PICKED, intent);
                 finish();
             }
         });

@@ -3,7 +3,7 @@ package com.waldm.MastermindAndroid.views;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.google.common.collect.Lists;
-import com.waldm.MastermindAndroid.MainActivity;
+import com.waldm.MastermindAndroid.Colour;
 import com.waldm.MastermindAndroid.R;
 import com.waldm.mastermind.Result;
 
@@ -45,7 +45,7 @@ public class PegRow extends LinearLayout{
 
     public void setColours(List<Peg> colours) {
         for (int i = 0; i < pegs.size(); i++) {
-            MainActivity.Colour colour = colours.get(i).getColour();
+            Colour colour = colours.get(i).getColour();
             pegs.get(i).setColour(colour);
         }
     }

@@ -14,5 +14,6 @@
         </activity>
         <activity android:name="com.waldm.MastermindAndroid.dialogs.ColourPickerDialog"
             android:theme="@android:style/Theme.Holo.Dialog"/>
+        <activity android:name="com.waldm.MastermindAndroid.SettingsActivity" />
     </application>
 </manifest>

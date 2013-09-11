@@ -21,23 +21,6 @@ import com.waldm.mastermind.UserInterface;
 import java.util.List;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
-
-    public static class Colour {
-        public static final Colour GREY = new Colour("Grey", 'G', R.drawable.unused_peg);
-        public static final Colour WHITE = new Colour("White", 'W', R.drawable.white_peg);
-        public static final Colour BLACK = new Colour("Black", 'B', R.drawable.black_peg);
-        public static final Colour NONE = new Colour("NONE", 'N', R.drawable.transparent_peg);
-        public final int drawableResource;
-        public final String name;
-        public final char shortName;
-
-        public Colour(String name, char shortName, int drawableResource) {
-            this.drawableResource = drawableResource;
-            this.name = name;
-            this.shortName = shortName;
-        }
-    }
-
     public static ImmutableList<Colour> colours = new ImmutableList.Builder<Colour>()
                                                                         .add(new Colour("Red", 'R', R.drawable.red_peg))
                                                                         .add(new Colour("Orange", 'O', R.drawable.orange_peg))
@@ -51,7 +34,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     private Button guessEntered;
     private List<PegRow> pegRows = Lists.newArrayList();
     private Peg selectedPeg;
-    private static final int PICK_COLOUR = 1990;
+    public static final int RESULT_COLOUR_PICKED = 1989;
+    private static final int REQUEST_PICK_COLOUR = 1990;
+    private static final int REQUEST_CHANGE_SETTINGS = 1991;
 
     /**
      * Called when the activity is first created.
@@ -92,6 +77,8 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
                 newGame();
                 return true;
             case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, REQUEST_CHANGE_SETTINGS);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -245,12 +232,12 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     public void displayColourPicker(Peg peg) {
         selectedPeg = peg;
         Intent intent = new Intent(this, ColourPickerDialog.class);
-        startActivityForResult(intent, PICK_COLOUR);
+        startActivityForResult(intent, REQUEST_PICK_COLOUR);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != ColourPickerDialog.COLOUR_PICKED || requestCode != PICK_COLOUR) {
+        if (resultCode != RESULT_COLOUR_PICKED || requestCode != REQUEST_PICK_COLOUR) {
             return;
         }
 

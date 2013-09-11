@@ -3,7 +3,7 @@ package com.waldm.MastermindAndroid.views;
 import android.content.Context;
 import android.widget.LinearLayout;
 import com.google.common.collect.Lists;
-import com.waldm.MastermindAndroid.MainActivity;
+import com.waldm.MastermindAndroid.Colour;
 import com.waldm.mastermind.Result;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class FeedbackPegs extends LinearLayout{
         setOrientation(HORIZONTAL);
 
         for (int i = 0; i < numberOfPegs; i++) {
-            Peg peg = new Peg(context, MainActivity.Colour.NONE, null);
+            Peg peg = new Peg(context, Colour.NONE, null);
             pegs.add(peg);
             addView(peg);
         }
@@ -28,10 +28,10 @@ public class FeedbackPegs extends LinearLayout{
 
         for (Peg peg : pegs) {
             if (correctLocation > 0) {
-                peg.setColour(MainActivity.Colour.BLACK);
+                peg.setColour(Colour.BLACK);
                 correctLocation--;
             } else if (correctColour > 0) {
-                peg.setColour(MainActivity.Colour.WHITE);
+                peg.setColour(Colour.WHITE);
                 correctColour--;
             }
         }
