@@ -2,6 +2,7 @@ package com.waldm.MastermindAndroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -152,7 +153,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         if (!guessWasCorrect && mastermind.getNumberOfGuessesLeft() == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Sorry, you lost");
-            builder.show();
+            Dialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
             guessEntered.setVisibility(View.GONE);
         } else {
             Result result = mastermind.calculateResult(guess);
@@ -162,7 +165,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         if (guessWasCorrect) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Congratulations, you won!");
-            builder.show();
+            Dialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
             guessEntered.setVisibility(View.GONE);
         }
     }
@@ -223,7 +228,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         message += " the game. The code was: " + code;
 
         builder.setMessage(message);
-        builder.show();
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     @Override
