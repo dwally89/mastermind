@@ -60,6 +60,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        setTitle("");
 
         guessEntered = new Button(this);
         guessEntered.setText(R.string.button_guess);
