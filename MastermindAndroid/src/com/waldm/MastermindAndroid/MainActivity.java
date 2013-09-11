@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -89,7 +91,8 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         mainLayout.removeAllViews();
 
-        final int codeLength = 4;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final int codeLength = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_CODE_LENGTH, "5"));
         final int maximumNumberOfGuesses = 12;
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0);

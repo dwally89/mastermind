@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_codeLength_key"
+        android:title="@string/pref_codeLength"
+        android:dialogTitle="@string/pref_codeLength"
+        android:entries="@array/pref_codeLength_entries"
+        android:entryValues="@array/pref_codeLength_values"
+        android:defaultValue="@string/pref_codeLength_default" />
+</PreferenceScreen>

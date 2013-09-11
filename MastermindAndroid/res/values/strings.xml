@@ -7,4 +7,6 @@
     <string name="button_guess">Guess</string>
     <string name="new_game">New game</string>
     <string name="settings">Settings</string>
+    <string name="pref_codeLength">Code length</string>
+    <string name="pref_codeLength_default">4</string>
 </resources>
