@@ -1,43 +1,23 @@
 package com.waldm.MastermindAndroid.dialogs;
 
-import android.app.ListActivity;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import com.google.common.collect.Lists;
 import com.waldm.MastermindAndroid.Colour;
 import com.waldm.MastermindAndroid.ColourRepository;
 import com.waldm.MastermindAndroid.MainActivity;
 import com.waldm.MastermindAndroid.R;
+import com.waldm.MastermindAndroid.views.Peg;
+import com.waldm.MastermindAndroid.views.PegRow;
 
 import java.util.List;
 
-public class ColourPickerDialog extends ListActivity {
+public class ColourPickerDialog extends Activity implements Peg.PegClickListener {
     public static final String COLOUR_KEY = "ColourKey";
-
-    private class PegAdapter extends ArrayAdapter<Colour>{
-        public PegAdapter(Context context, List<Colour> array) {
-            super(context, 0, array);
-        }
-
-        @Override
-        public final View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_item_peg, parent, false);
-            }
-
-            TextView textView = (TextView)convertView.findViewById(R.id.text);
-            textView.setText(getItem(position).name);
-
-            ImageView image = (ImageView)convertView.findViewById(R.id.image);
-            image.setImageResource(getItem(position).drawableResource);
-            return convertView;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +26,36 @@ public class ColourPickerDialog extends ListActivity {
         final int numberOfAvailableColours = getIntent().getIntExtra(MainActivity.NUMBER_OF_AVAILABLE_COLOURS, -1);
         final ColourRepository colourRepository = new ColourRepository(numberOfAvailableColours);
 
-        PegAdapter adapter = new PegAdapter(this, colourRepository.getAvailableColours());
-        setListAdapter(adapter);
+        RelativeLayout mainLayout = new RelativeLayout(this);
+        int padding = Math.round(getResources().getDimension(R.dimen.colour_picker_dialog_padding));
+        mainLayout.setPadding(padding, padding, padding, padding);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        List<Peg> pegs = Lists.newArrayList();
+        for (Colour colour : colourRepository.getAvailableColours()) {
+            pegs.add(new Peg(this, colour, this));
+        }
+
+        PegRow pegRow = new PegRow(this, pegs, false);
+        mainLayout.addView(pegRow, params);
+
+        setContentView(mainLayout, params);
 
         setTitle(R.string.colour_picker_title);
 
-        final ListView listView = getListView();
+        Window window = getWindow();
+        WindowManager.LayoutParams windowParams = new WindowManager.LayoutParams();
+        windowParams.copyFrom(window.getAttributes());
+        windowParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        windowParams.height = getResources().getDimensionPixelSize(R.dimen.colour_picker_dialog_height);
+        window.setAttributes(windowParams);
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Colour arrayItem = colourRepository.getAvailableColours().get(position);
-                Intent intent = new Intent();
-                intent.putExtra(COLOUR_KEY, arrayItem.name);
-                setResult(MainActivity.RESULT_COLOUR_PICKED, intent);
-                finish();
-            }
-        });
+    @Override
+    public void onPegClick(Peg peg) {
+        Intent intent = new Intent();
+        intent.putExtra(COLOUR_KEY, peg.getColour().name);
+        setResult(MainActivity.RESULT_COLOUR_PICKED, intent);
+        finish();
     }
 }

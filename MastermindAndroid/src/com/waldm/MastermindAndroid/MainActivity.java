@@ -239,7 +239,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     }
 
     @Override
-    public void displayColourPicker(Peg peg) {
+    public void onPegClick(Peg peg) {
         selectedPeg = peg;
         Intent intent = new Intent(this, ColourPickerDialog.class);
         intent.putExtra(NUMBER_OF_AVAILABLE_COLOURS, numberOfAvailableColours);

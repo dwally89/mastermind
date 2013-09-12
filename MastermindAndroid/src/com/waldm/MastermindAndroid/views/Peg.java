@@ -11,7 +11,7 @@ public class Peg extends ImageView {
     private Colour colour;
 
     public interface PegClickListener {
-        void displayColourPicker(Peg peg);
+        void onPegClick(Peg peg);
     }
 
     public Peg(Context context, Colour colour, final PegClickListener listener) {
@@ -31,7 +31,7 @@ public class Peg extends ImageView {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.displayColourPicker((Peg)view);
+                listener.onPegClick((Peg) view);
             }
         });
     }
