@@ -30,7 +30,6 @@ public class HumanGameActivity extends Activity implements UserInterface, Peg.Pe
     private Peg selectedPeg;
     public static final int RESULT_COLOUR_PICKED = 1989;
     private static final int REQUEST_PICK_COLOUR = 1990;
-    private static final int REQUEST_CHANGE_SETTINGS = 1991;
     public static final String NUMBER_OF_AVAILABLE_COLOURS = "NumberOfAvailableColours";
     private ColourRepository colourRepository;
     private int numberOfAvailableColours;
@@ -75,7 +74,7 @@ public class HumanGameActivity extends Activity implements UserInterface, Peg.Pe
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(intent, REQUEST_CHANGE_SETTINGS);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -177,9 +176,7 @@ public class HumanGameActivity extends Activity implements UserInterface, Peg.Pe
     public void alertGameStarting() {  }
 
     @Override
-    public void displayWelcomeMessage() {
-        createDialog(R.string.welcome_message);
-    }
+    public void displayWelcomeMessage() {  }
 
     @Override
     public boolean askIfGuessWasCorrect(String guess) {

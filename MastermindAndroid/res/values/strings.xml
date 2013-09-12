@@ -13,4 +13,6 @@
     <string name="congratulations">Congratulations, you won!</string>
     <string name="game_over">Sorry, you lost</string>
     <string name="pref_numberOfColours">Number of colours</string>
+    <string name="mastermind">Mastermind</string>
+    <string name="challenge_computer">Challenge the computer!</string>
 </resources>
