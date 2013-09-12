@@ -22,7 +22,7 @@ import com.waldm.mastermind.UserInterface;
 
 import java.util.List;
 
-public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
+public class HumanGameActivity extends Activity implements UserInterface, Peg.PegClickListener {
     private Mastermind mastermind;
     private PegRow guessRow;
     private Button guessEntered;
