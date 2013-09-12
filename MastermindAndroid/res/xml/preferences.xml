@@ -8,4 +8,11 @@
         android:entries="@array/pref_codeLength_entries"
         android:entryValues="@array/pref_codeLength_values"
         android:defaultValue="@string/pref_codeLength_default" />
+    <ListPreference
+        android:key="pref_numberOfColours_key"
+        android:title="@string/pref_numberOfColours"
+        android:dialogTitle="@string/pref_numberOfColours"
+        android:entries="@array/pref_numberOfColours_entries"
+        android:entryValues="@array/pref_numberOfColours_values"
+        android:defaultValue="@string/pref_numberOfColours_default" />
 </PreferenceScreen>

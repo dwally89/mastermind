@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.waldm.MastermindAndroid.dialogs.ColourPickerDialog;
 import com.waldm.MastermindAndroid.views.Peg;
@@ -24,14 +23,6 @@ import com.waldm.mastermind.UserInterface;
 import java.util.List;
 
 public class MainActivity extends Activity implements UserInterface, Peg.PegClickListener {
-    public static ImmutableList<Colour> colours = new ImmutableList.Builder<Colour>()
-                                                                        .add(new Colour("Red", 'R', R.drawable.red_peg))
-                                                                        .add(new Colour("Orange", 'O', R.drawable.orange_peg))
-                                                                        .add(new Colour("Yellow", 'Y', R.drawable.yellow_peg))
-                                                                        .add(new Colour("Green", 'G', R.drawable.green_peg))
-                                                                        .add(new Colour("Blue", 'B', R.drawable.blue_peg))
-                                                                        .add(new Colour("Purple", 'P', R.drawable.purple_peg))
-                                                                        .build();
     private Mastermind mastermind;
     private PegRow guessRow;
     private Button guessEntered;
@@ -40,6 +31,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     public static final int RESULT_COLOUR_PICKED = 1989;
     private static final int REQUEST_PICK_COLOUR = 1990;
     private static final int REQUEST_CHANGE_SETTINGS = 1991;
+    public static final String NUMBER_OF_AVAILABLE_COLOURS = "NumberOfAvailableColours";
+    private ColourRepository colourRepository;
+    private int numberOfAvailableColours;
 
     /**
      * Called when the activity is first created.
@@ -92,8 +86,9 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         mainLayout.removeAllViews();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        final int codeLength = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_CODE_LENGTH, "5"));
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final int codeLength = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_CODE_LENGTH,
+                getString(R.string.pref_codeLength_default)));
         final int maximumNumberOfGuesses = 12;
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
@@ -107,7 +102,13 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         guessEntered.setVisibility(View.VISIBLE);
         guessEntered.setEnabled(false);
 
-        char[] alphabet = new char[colours.size()];
+        numberOfAvailableColours = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_NUMBER_OF_COLOURS,
+                getString(R.string.pref_numberOfColours_default)));
+        this.colourRepository = new ColourRepository(numberOfAvailableColours);
+
+
+        char[] alphabet = new char[numberOfAvailableColours];
+        List<Colour> colours = colourRepository.getAvailableColours();
         for (int i = 0; i < alphabet.length; i++) {
             alphabet[i] = colours.get(i).shortName;
         }
@@ -241,6 +242,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
     public void displayColourPicker(Peg peg) {
         selectedPeg = peg;
         Intent intent = new Intent(this, ColourPickerDialog.class);
+        intent.putExtra(NUMBER_OF_AVAILABLE_COLOURS, numberOfAvailableColours);
         startActivityForResult(intent, REQUEST_PICK_COLOUR);
     }
 
@@ -251,7 +253,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         }
 
         String colourName = data.getStringExtra(ColourPickerDialog.COLOUR_KEY);
-        for (Colour colour : colours) {
+        for (Colour colour : colourRepository.getAvailableColours()) {
             if (colour.name.equals(colourName)) {
                 selectedPeg.setColour(colour);
                 break;

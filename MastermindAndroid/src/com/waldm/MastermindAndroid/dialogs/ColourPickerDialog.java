@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.waldm.MastermindAndroid.Colour;
+import com.waldm.MastermindAndroid.ColourRepository;
 import com.waldm.MastermindAndroid.MainActivity;
 import com.waldm.MastermindAndroid.R;
 
@@ -42,7 +43,10 @@ public class ColourPickerDialog extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PegAdapter adapter = new PegAdapter(this, MainActivity.colours);
+        final int numberOfAvailableColours = getIntent().getIntExtra(MainActivity.NUMBER_OF_AVAILABLE_COLOURS, -1);
+        final ColourRepository colourRepository = new ColourRepository(numberOfAvailableColours);
+
+        PegAdapter adapter = new PegAdapter(this, colourRepository.getAvailableColours());
         setListAdapter(adapter);
 
         setTitle(R.string.colour_picker_title);
@@ -52,7 +56,7 @@ public class ColourPickerDialog extends ListActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Colour arrayItem = MainActivity.colours.get(position);
+                Colour arrayItem = colourRepository.getAvailableColours().get(position);
                 Intent intent = new Intent();
                 intent.putExtra(COLOUR_KEY, arrayItem.name);
                 setResult(MainActivity.RESULT_COLOUR_PICKED, intent);
