@@ -151,11 +151,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         }
 
         if (!guessWasCorrect && mastermind.getNumberOfGuessesLeft() == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Sorry, you lost");
-            Dialog dialog = builder.create();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.show();
+            createDialog(R.string.game_over);
             guessEntered.setVisibility(View.GONE);
         } else {
             Result result = mastermind.calculateResult(guess);
@@ -163,13 +159,17 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         }
 
         if (guessWasCorrect) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Congratulations, you won!");
-            Dialog dialog = builder.create();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.show();
+            createDialog(R.string.congratulations);
             guessEntered.setVisibility(View.GONE);
         }
+    }
+
+    private void createDialog(int messageId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(messageId);
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     @Override
@@ -177,9 +177,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
 
     @Override
     public void displayWelcomeMessage() {
-        AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.welcome_message).create();
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
+        createDialog(R.string.welcome_message);
     }
 
     @Override
@@ -226,6 +224,7 @@ public class MainActivity extends Activity implements UserInterface, Peg.PegClic
         }
 
         message += " the game. The code was: " + code;
+
 
         builder.setMessage(message);
         Dialog dialog = builder.create();
