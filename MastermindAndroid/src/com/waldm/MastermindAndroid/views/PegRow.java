@@ -53,4 +53,16 @@ public class PegRow extends LinearLayout{
     public void setResult(Result result) {
         feedbackPegs.update(result);
     }
+
+    public void setFeedbackPegsListener(OnClickListener listener) {
+        feedbackPegs.setPegsOnClickListener(listener);
+    }
+
+    public void removeFeedbackPegsListener() {
+        feedbackPegs.removePegsOnClickListener();
+    }
+
+    public Result getFeedbackPegsResult() {
+        return feedbackPegs.getResult();
+    }
 }

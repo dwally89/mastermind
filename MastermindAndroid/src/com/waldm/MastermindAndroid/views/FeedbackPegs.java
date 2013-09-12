@@ -36,4 +36,28 @@ public class FeedbackPegs extends LinearLayout{
             }
         }
     }
+
+    public void setPegsOnClickListener (OnClickListener listener) {
+        for (Peg peg : pegs) {
+            peg.setOnClickListener(listener);
+        }
+    }
+
+    public void removePegsOnClickListener() {
+        setPegsOnClickListener(null);
+    }
+
+    public Result getResult() {
+        int locationCorrect = 0;
+        int colourCorrect = 0;
+        for (Peg peg : pegs) {
+            if (peg.getColour() == Colour.BLACK) {
+                locationCorrect++;
+            } else if (peg.getColour() == Colour.WHITE) {
+                colourCorrect++;
+            }
+        }
+
+        return new Result(locationCorrect, colourCorrect);
+    }
 }

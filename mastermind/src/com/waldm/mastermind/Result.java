@@ -4,7 +4,7 @@ public class Result {
     public final int locationCorrect;
     public final int numberCorrect;
 
-    private Result(int locationCorrect, int numberCorrect) {
+    public Result(int locationCorrect, int numberCorrect) {
         this.locationCorrect = locationCorrect;
         this.numberCorrect = numberCorrect;
     }

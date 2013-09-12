@@ -5,5 +5,5 @@ public interface CommandLinePlayer extends Player{
     void informNumberOfGuessesLeft(int numberOfGuessesLeft);
     void informResult(Result result);
     void informGameOver(String code, boolean playerWon, int numberOfGuessesPlayed);
-    String requestGuess(int codeLength, char[] alphabet);
+    String requestGuess(int codeLength, char[] alphabet) throws ComputerPlayer.NoPossibilitiesRemainingException;
 }

@@ -11,7 +11,7 @@ public class HumanCodeCreator implements CodeCreator {
 
     @Override
     public boolean guessWasCorrect(String guess) {
-        return userInterface.askIfGuessWasCorrect(guess);
+        return false;//return userInterface.askIfGuessWasCorrect(guess);
     }
 
     @Override

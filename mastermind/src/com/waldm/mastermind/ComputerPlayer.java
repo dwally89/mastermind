@@ -31,8 +31,12 @@ public class ComputerPlayer implements CommandLinePlayer {
     }
 
     @Override
-    public String requestGuess(int codeLength, char[] alphabet) {
+    public String requestGuess(int codeLength, char[] alphabet) throws NoPossibilitiesRemainingException {
         Random random = new Random();
+        if (possibilities.isEmpty()) {
+            throw new NoPossibilitiesRemainingException();
+        }
+
         currentGuess = possibilities.remove(random.nextInt(possibilities.size()));
         return currentGuess;
     }
@@ -72,4 +76,6 @@ public class ComputerPlayer implements CommandLinePlayer {
 
         System.exit(0);
     }
+
+    public class NoPossibilitiesRemainingException extends Exception {  }
 }

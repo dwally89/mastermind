@@ -34,9 +34,6 @@ public class HumanGameActivity extends Activity implements UserInterface, Peg.Pe
     private ColourRepository colourRepository;
     private int numberOfAvailableColours;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

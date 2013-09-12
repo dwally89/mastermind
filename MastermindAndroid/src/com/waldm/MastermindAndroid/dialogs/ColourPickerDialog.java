@@ -7,10 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import com.google.common.collect.Lists;
-import com.waldm.MastermindAndroid.Colour;
-import com.waldm.MastermindAndroid.ColourRepository;
-import com.waldm.MastermindAndroid.HumanGameActivity;
-import com.waldm.MastermindAndroid.R;
+import com.waldm.MastermindAndroid.*;
 import com.waldm.MastermindAndroid.views.Peg;
 import com.waldm.MastermindAndroid.views.PegRow;
 
@@ -23,20 +20,27 @@ public class ColourPickerDialog extends Activity implements Peg.PegClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final int numberOfAvailableColours = getIntent().getIntExtra(HumanGameActivity.NUMBER_OF_AVAILABLE_COLOURS, -1);
-        final ColourRepository colourRepository = new ColourRepository(numberOfAvailableColours);
+        List<Peg> pegs = Lists.newArrayList();
+
+        if (getIntent().getBooleanExtra(ChallengeComputerActivity.IS_FEEDBACK_DIALOG, false)) {
+            pegs.add(new Peg(this, Colour.BLACK, this));
+            pegs.add(new Peg(this, Colour.WHITE, this));
+        } else {
+            final int numberOfAvailableColours = getIntent().getIntExtra(HumanGameActivity.NUMBER_OF_AVAILABLE_COLOURS, -1);
+            final ColourRepository colourRepository = new ColourRepository(numberOfAvailableColours);
+
+            for (Colour colour : colourRepository.getAvailableColours()) {
+                pegs.add(new Peg(this, colour, this));
+            }
+        }
+
+        PegRow pegRow = new PegRow(this, pegs, false);
 
         RelativeLayout mainLayout = new RelativeLayout(this);
         int padding = Math.round(getResources().getDimension(R.dimen.colour_picker_dialog_padding));
         mainLayout.setPadding(padding, padding, padding, padding);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
-        List<Peg> pegs = Lists.newArrayList();
-        for (Colour colour : colourRepository.getAvailableColours()) {
-            pegs.add(new Peg(this, colour, this));
-        }
-
-        PegRow pegRow = new PegRow(this, pegs, false);
         mainLayout.addView(pegRow, params);
 
         setContentView(mainLayout, params);

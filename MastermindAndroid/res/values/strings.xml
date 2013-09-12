@@ -15,4 +15,9 @@
     <string name="pref_numberOfColours">Number of colours</string>
     <string name="mastermind">Mastermind</string>
     <string name="challenge_computer">Challenge the computer!</string>
+    <string name="think_of_a_code">Think of a code (check the settings for code length and valid colours)</string>
+    <string name="button_alert_feedback">Alert feedback</string>
+    <string name="computer_player_won">Computer player won!</string>
+    <string name="invalid_feedback">Invalid feedback must have been given as there are no possibilities available!
+    </string>
 </resources>

@@ -24,6 +24,9 @@ public class CommandLineInterface implements UserInterface {
                     guessIsValid = true;
                 } catch (Mastermind.IncorrectGuessLengthException e) {
                     System.out.println("Guesses must contain " + e.codeLength + " characters");
+                } catch (ComputerPlayer.NoPossibilitiesRemainingException e) {
+                    // TODO Handle this exception
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
 
